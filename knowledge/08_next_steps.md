@@ -14,6 +14,30 @@ proof-of-concept hardware:
 5. **Experimental validation** — spin the RWA on the platform, compare measured imbalance values
    against a known reference to validate the mathematical model and signal processing pipeline.
 
+## Design Iteration Workflow (Stinger Analysis → CAD → FEA → Validation)
+
+A repeatable loop to run every time stinger geometry changes (not just once), bridging
+[[06_stinger_design_analysis]] and [[07_finite_element_analysis]]:
+
+1. **Run `stinger_design_V3.m`** with the candidate geometry until all five checks (`fn`,
+   `kax/klat`, `SFbuckle`, `SFyield`, `fn_combined`) pass for both axial and radial stingers.
+2. **Update CAD geometry** — apply the passing stinger diameter(s)/length(s) (and any radial
+   support wall-thickness change) to the assembly.
+3. **Re-export STEP and re-import to ANSYS** — re-run "Form New Part" to restore shared-node
+   topology at all interfaces (per the setup in [[07_finite_element_analysis]]).
+4. **Re-run modal analysis** — same fixed-support boundary condition and point-mass RWA
+   representation; extract the first 10 natural frequencies.
+5. **Compare FEA vs. analytical** — check the FEA mode corresponding to axial bounce against
+   `stinger_design_V3.m`'s analytical `fn` prediction; a large disagreement (>10-15%) flags a
+   modelling assumption to revisit (boundary conditions, point-mass placement, stinger fixity
+   idealisation).
+6. **Validate against design targets** — confirm all six lowest modes (lateral translation ×2,
+   torsion, axial bounce, rocking ×2) clear the 500 Hz stinger design target; if not, iterate
+   geometry and repeat from step 2.
+7. **Log the outcome** — record the final passing geometry and FEA mode frequencies in
+   [[07_finite_element_analysis]], and update [[06_stinger_design_analysis]] if the selected
+   dimensions change.
+
 ## Other Open Items Flagged Elsewhere
 
 - **Dynamic imbalance measurement** currently unresolved with the single-plane stinger

@@ -97,6 +97,8 @@ V_DAQ             = 5.0;        % DAQ input voltage range [V]      *** UPDATE **
 fs                = 10000;      % DAQ sample rate [Hz]             *** UPDATE ***
 N_avg             = 20;         % Number of revolutions averaged   *** UPDATE ***
 f_measure_max     = 500;        % Max measurement frequency [Hz]
+m_transducer      = 0.005;      % Transducer seismic/moving mass   *** UPDATE ***
+                                 % [kg] (McConnell & Cappa, 2000)
 
 %% =========================================================================
 %  SECTION 6 — DESIGN TARGETS
@@ -245,7 +247,19 @@ delta_lat_ax = F_lat_each / k_lat_ax;
 fprintf('  INFO — Lateral deflection under max radial force\n');
 fprintf('    Delta = %.4f mm\n\n', delta_lat_ax*1000);
 
-checks_ax = [pass1, pass2, pass3, pass4];
+% CHECK 5 — Combined transducer-inertia + stinger-stiffness resonance
+% (McConnell & Cappa, 2000): transducer seismic mass in series with the
+% stinger's axial stiffness forms a resonance that can contaminate the
+% measured FRF even when well above the measurement band.
+fn_comb_ax = (1/(2*pi)) * sqrt(k_ax_single / m_transducer);
+pass_ax5 = fn_comb_ax > fn_target;
+fprintf('  CHECK 5 — Transducer-inertia/stinger resonance (McConnell & Cappa, 2000)\n');
+fprintf('    k_axial per stinger: %.3e N/m\n', k_ax_single);
+fprintf('    Transducer mass:     %.4f kg\n', m_transducer);
+fprintf('    fn_combined = %.1f Hz   target > %d Hz\n', fn_comb_ax, fn_target);
+fprintf('    %s\n\n', result_str(pass_ax5));
+
+checks_ax = [pass1, pass2, pass3, pass4, pass_ax5];
 
 %% =========================================================================
 %  RADIAL STINGER CHECKS
@@ -302,7 +316,17 @@ fprintf('    Yield strength:     %.0f MPa\n', sigma_y/1e6);
 fprintf('    Safety factor: %.1f   target > %.1f\n', SF_y_rad, SF_yield_target);
 fprintf('    %s\n\n', result_str(pass8));
 
-checks_rad = [pass5, pass6, pass7, pass8];
+% CHECK 5 — Combined transducer-inertia + stinger-stiffness resonance
+% (McConnell & Cappa, 2000) — see axial section above for derivation.
+fn_comb_rad = (1/(2*pi)) * sqrt(k_rad_single / m_transducer);
+pass_rad5 = fn_comb_rad > fn_target;
+fprintf('  CHECK 5 — Transducer-inertia/stinger resonance (McConnell & Cappa, 2000)\n');
+fprintf('    k_axial per stinger: %.3e N/m\n', k_rad_single);
+fprintf('    Transducer mass:     %.4f kg\n', m_transducer);
+fprintf('    fn_combined = %.1f Hz   target > %d Hz\n', fn_comb_rad, fn_target);
+fprintf('    %s\n\n', result_str(pass_rad5));
+
+checks_rad = [pass5, pass6, pass7, pass8, pass_rad5];
 
 %% =========================================================================
 %  SIGNAL CHAIN CHECKS
@@ -534,14 +558,15 @@ fprintf('=================================================================\n');
 
 fprintf('\n  AXIAL STINGERS   d=%.1fmm  L=%.0fmm  %s\n', ...
     d_axial*1000, L_axial*1000, mat_name);
-ax_labels = {'Natural frequency','Stiffness ratio','Buckling SF','Yield SF'};
-for i = 1:4
+ax_labels = {'Natural frequency','Stiffness ratio','Buckling SF','Yield SF', ...
+    'Transducer-stinger resonance'};
+for i = 1:5
     fprintf('    [%s] %s\n', pass_str(checks_ax(i)), ax_labels{i});
 end
 
 fprintf('\n  RADIAL STINGERS  d=%.1fmm  L=%.0fmm  %s\n', ...
     d_radial*1000, L_radial*1000, mat_name);
-for i = 1:4
+for i = 1:5
     fprintf('    [%s] %s\n', pass_str(checks_rad(i)), ax_labels{i});
 end
 
@@ -592,8 +617,8 @@ fprintf('=================================================================\n\n')
 % --- Search ranges ---
 d_ax_range  = (1.0:0.2:4.0) * 1e-3;   % axial diameter [m]
 d_rad_range = (1.0:0.2:4.0) * 1e-3;   % radial diameter [m]
-L_ax_range  = (30:5:150)   * 1e-3;    % axial length [m]
-L_rad_range = (30:5:150)   * 1e-3;    % radial length [m]
+L_ax_range  = (30:5:175)   * 1e-3;    % axial length [m]
+L_rad_range = (30:5:175)   * 1e-3;    % radial length [m]
 
 % --- Storage for feasible solutions ---
 results = [];  % each row: [d_ax, d_rad, L_ax, L_rad, fn_ax, fn_rad, ratio_ax, ratio_rad, SF_bk_ax, SF_bk_rad, SF_y_ax, SF_y_rad]

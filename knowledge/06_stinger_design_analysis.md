@@ -3,7 +3,7 @@
 Part of [[00_project_overview]]. See also [[04_concept_design]], [[07_finite_element_analysis]].
 Related code: [plots.py](../plots.py), [stinger_design_V3.m](../stinger_design_V3.m).
 
-## Design Requirements — Four Checks Per Stinger
+## Design Requirements — Five Checks Per Stinger
 
 | Check | Target | Reasoning |
 |---|---|---|
@@ -11,6 +11,7 @@ Related code: [plots.py](../plots.py), [stinger_design_V3.m](../stinger_design_V
 | `kax/klat` | > 3000 | Cross-axis error < 0.03% |
 | `SFbuckle` | > 5 | Sudden catastrophic failure margin |
 | `SFyield` | > 3 | Fatigue endurance limit |
+| `fn_combined` | > 500 Hz | Transducer-inertia/stinger resonance stays out of the measurement band (McConnell & Cappa, 2000) |
 
 ## Analytical Framework
 
@@ -47,11 +48,31 @@ Substituted into `fn` once sensor specs are confirmed.
 | kax/klat | > 3000 | 3333 ✓ | 3333 ✓ |
 | SFbuckle | > 5 | 100.9 ✓ | 241.7 ✓ |
 | SFyield | > 3 | 6.4 ✓ | 4671.6 ✓ |
+| fn_combined [Hz] | > 500 | depends on `m_transducer` — re-run `stinger_design_V3.m` once sensor is confirmed | same |
 
 - The high radial yield safety factor reflects negligible out-of-plane bending on the radial
   stingers — axial stingers carry virtually all vertical load due to their much higher axial
   stiffness.
-- All four checks pass for both stinger types at the selected dimensions.
+- All four original checks pass for both stinger types at the selected dimensions. The fifth
+  (transducer-inertia/stinger resonance) check depends on the transducer's seismic mass, which is
+  a placeholder value until sensor procurement is finalised (see [[08_next_steps]]).
+
+## Check 5 — Transducer-Inertia + Stinger-Stiffness Resonance
+
+Per McConnell & Cappa (2000, *Mechanical Systems and Signal Processing* 14(4), pp. 625-636), the
+force transducer's own seismic (moving) mass forms a mass-spring resonance in series with the
+stinger's axial stiffness:
+
+```
+fn_combined = (1/2π) · sqrt(k_stinger / m_transducer)
+```
+
+Even when this resonance sits well above the frequencies of interest (~675 Hz in their free-free
+beam test), it can still shift and corrupt the measured driving-point FRF below that frequency —
+so clearing the stinger-alone `fn` check (which uses the much larger total suspended mass
+`m_total`) is not sufficient on its own. `m_transducer` is a new input (Section 5 of
+`stinger_design_V3.m`) representing the transducer's own moving mass, distinct from `m_total`
+used in Check 1. Target is the same 500 Hz one-third-rule threshold as Check 1.
 
 ## Literature Grounding: Transducer Mass/Inertia and Practical Setup
 
