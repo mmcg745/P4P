@@ -23,6 +23,15 @@ project workspace rather than a single-purpose codebase.
 - `excel data/` — raw ANSYS modal analysis exports (tab-delimited, `.xls` in name only) used by
   the plotting scripts.
 - Loose `.png` files — figures generated from the above.
+- `log/` — dated session log of what's been asked for and done in this repo. See
+  `log/README.md` for format.
+
+## Logging (mandatory)
+
+At the end of any session where work is done in this repo — code, data, docs, plots, or
+decisions, not just knowledge-file edits — add a new dated entry to `log/` following the format
+in `log/README.md`. This is required, not optional: it's how continuity across sessions is
+maintained. Do this before finishing up, not as an afterthought if asked.
 
 ## Working with this repo
 
