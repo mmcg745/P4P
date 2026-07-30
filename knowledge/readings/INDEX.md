@@ -1,6 +1,6 @@
 # Readings Index
 
-This file is a quick-reference dictionary for the 21 source PDFs in `knowledge/readings/`. Its
+This file is a quick-reference dictionary for the 22 source PDFs in `knowledge/readings/`. Its
 purpose is to let a reader (human or a future Claude session) understand what each paper covers
 — title, authors, topic, method, key findings, and relevance to the P4P project — **without
 opening the PDF**. Only open the underlying PDF if this index doesn't have enough detail, an
@@ -40,7 +40,8 @@ distilled notes.
   reaction wheel assembly.pdf
 - **Experimental test rigs / RWA characterisation:** 1982_testing_and_investigation_of_RWAs.pdf,
   RWAMicroVibration_Smet.pdf, Simulating&AnalysingRWAMicrovibration_Hahn.pdf, The effect of
-  assembly and static unbalance on reaction wheel assembly bearing harmonics.pdf
+  assembly and static unbalance on reaction wheel assembly bearing harmonics.pdf,
+  smet_mechanism_microvibration.pdf
 - **Reaction wheel actuator development / hardware:** ReactionWheelActuatorDevelopment_wade.pdf
 - **FEA/modal & suppression methods:** Micro-vibration suppression methods and key technologies
   for high-precision space optical instruments.pdf
@@ -356,6 +357,34 @@ distilled notes.
   piano-wire tradeoffs) for correctly implementing and troubleshooting the P4P stinger rig, as
   opposed to the more theoretical/correction-focused treatment in that paper. Not yet distilled
   into knowledge/ notes — recommended follow-up: fold into [[06_stinger_design_analysis]].
+
+### smet_mechanism_microvibration.pdf
+- **Title:** A Mechanisms Perspective on Microvibration - Good Practices and Lessons Learned
+- **Authors/Year:** Smet, G. and Patti, S., 2018. *Proceedings of the 44th Aerospace Mechanisms
+  Symposium*, NASA Glenn Research Center, pp. 191-204.
+- **Topic tags:** microvibration, good practices, requirements, verification methodology,
+  test facilities, mechanism design, review/tutorial
+- **Summary:** An ESA tutorial-style review aimed at mechanism designers, covering what
+  microvibration is and what causes it (imbalance, bearing irregularity, motor cogging, gearing),
+  why it is hard to handle (6-DOF noise, build-to-build variability, sensitivity to vacuum/
+  temperature/gravity/prior vibration exposure), how microvibration requirements are typically
+  specified (force/torque-vs-frequency or instantaneous-disturbance-vs-time), and both analytical
+  (mechanism-level + system-level modelling) and test-based verification approaches. Describes two
+  ESA test facilities in detail — the Reaction Wheel Characterisation Facility (RCF, a Kistler-type
+  dynamometer) and the 6-DOF microvibration test facility (6dMVMS) — including their frequency/
+  sensitivity ranges and limitations, and gives an extensive list of good practices for test-based
+  verification (test-rig mode contamination, MGSE modal design, gravity offloading effects, EGSE
+  electrical noise, run-in requirements, testing all units). Includes a case study contrasting
+  on-ground vs on-orbit noise behaviour of oil- vs dry-lubricated reaction wheels, and a case study
+  on the practical difficulty of verifying a large rotating scanner against an overly ambitious
+  requirement.
+- **Relevance to P4P:** Not yet distilled into knowledge/ notes. Highly relevant "how to actually
+  run a microvibration test rig" reference — the RCF/Kistler-table good-practices list (test-rig
+  mode contamination limiting usable frequency range, MGSE modal design, EGSE electrical noise,
+  run-in behaviour, unit-to-unit variability) directly informs how the P4P stinger rig should be
+  built and operated, complementing the stinger-specific guidance already folded into
+  [[06_stinger_design_analysis]]. Also useful context on how mechanism-level disturbance
+  measurements (what P4P produces) feed into system-level verification.
 
 ### validationofRWdisturbancemodel.pdf
 - **Title:** Development and validation of reaction wheel disturbance models: empirical model
