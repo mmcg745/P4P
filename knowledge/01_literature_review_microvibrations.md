@@ -73,6 +73,34 @@ m(t) = Σ Ci · Ω² · sin(2π hi Ω t + αi),  i = 1..n
   away from the sensitive 50–250 Hz band. Demonstrates direct measurement → characterisation →
   design-optimisation link.
 
+## Test-Fixture First Mode Target
+
+How high the test table/fixture's own first structural mode needs to be, based on precedent from
+comparable RWA test rigs in the readings (distinct from the stinger-specific check in
+[[06_stinger_design_analysis]], though the two are grounded in the same underlying principle):
+
+- **Governing principle (McConnell & Cappa, 2000):** the fixture's own resonance must sit well
+  clear of the measurement band — even a resonance well above the frequencies of interest
+  (~675 Hz in their free-free beam test) still measurably distorted the FRF below it. This
+  motivates a "one-third rule" margin (fn > 3× the top frequency requiring clean data) rather than
+  just fn > top frequency.
+- **SSTL Kistler table (Smet et al., 2013):** in practice, this table + its MGSE was only trusted
+  to give reliable data up to **500 Hz**; structural modes of the table/MGSE itself showed up as
+  spurious peaks around 250–400 Hz during breadboard testing and had to be stiffened out before
+  the rig met that ceiling.
+- **KBT rig (Hodge et al., 2021):** purpose-built to push its own structural modes out of the way
+  of a required 0–6000 RPM / up-to-593 Hz bearing-harmonic range. By replacing the standard
+  ~2 kg wheel disk with a ~200 g light disk-shaft assembly, they raised the axial mode from
+  ~250 Hz to **~520 Hz (±10%)** and the lateral mode from ~600 Hz to **>1000 Hz**, giving an
+  interference-free measurement region across the full speed range.
+
+**Distilled target:** based on these two precedents alone, a fixture first mode of **~500–600 Hz
+is the minimum bar** matched by real flight-programme rigs (SSTL Kistler table's validated
+ceiling, KBT's achieved axial mode); **>1000 Hz is the stronger target** if a fully
+interference-free region up to ~600 Hz is wanted, consistent with the one-third rule and with the
+KBT's lateral-mode result. This independently supports the 500 Hz threshold already adopted for
+the P4P stinger checks in [[06_stinger_design_analysis]].
+
 ## Gaps Identified (motivating this project)
 
 1. No existing platform simultaneously measures microvibration forces, rotor imbalance, and
