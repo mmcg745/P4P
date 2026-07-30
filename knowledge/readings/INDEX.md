@@ -1,6 +1,6 @@
 # Readings Index
 
-This file is a quick-reference dictionary for the 20 source PDFs in `knowledge/readings/`. Its
+This file is a quick-reference dictionary for the 21 source PDFs in `knowledge/readings/`. Its
 purpose is to let a reader (human or a future Claude session) understand what each paper covers
 — title, authors, topic, method, key findings, and relevance to the P4P project — **without
 opening the PDF**. Only open the underlying PDF if this index doesn't have enough detail, an
@@ -26,7 +26,7 @@ distilled notes.
 - **Torque measurement:** Liu_2019_IOP_Conf._Ser.__Mater._Sci._Eng._542_012013.pdf,
   Zappalá_2018_Meas._Sci._Technol._29_065207.pdf
 - **Stinger/transducer design (test methodology, directly relevant to device build):** TRANSDUCER
-  INERTIA AND STINGER STIFFNESS.pdf
+  INERTIA AND STINGER STIFFNESS.pdf, isma2010_0687.pdf
 - **Disturbance modeling (empirical/analytical RWA disturbance models):**
   validationofRWdisturbancemodel.pdf, Modeling and validation of reaction wheel micro-vibrations
   considering imbalances and bearing disturbances.pdf, Microvibration_Model_Development_and_
@@ -335,6 +335,27 @@ distilled notes.
 - **Relevance to P4P:** Not yet distilled into knowledge/ notes. Relevant if the P4P test setup or
   target application involves a compliant/isolated wheel mount — informs expectations for how
   suspension compliance changes measured disturbance transmission compared to a rigid mount.
+
+### isma2010_0687.pdf
+- **Title:** Practical Aspects of Shaker Measurements for Modal Testing
+- **Authors/Year:** Peres, M.A., Bono, R.W. and Brown, D.L., 2010. *Proceedings of ISMA2010
+  including USD2010*, pp. 2539-2550.
+- **Topic tags:** stinger/transducer design, modal testing, shaker setup, FRF measurement,
+  practical/experimental guidance
+- **Summary:** A practical, non-mathematical guide to shaker-based modal testing setup, covering
+  force transducer/impedance head selection and mounting (uni-directional sensing, correct
+  transducer-to-stinger-to-shaker ordering), electrodynamic shaker principles and the through-hole
+  armature/chuck-and-collet design, shaker alignment technique, and stinger theory of operation.
+  Explains why a stinger must be stiff axially but compliant laterally (to avoid unmeasured
+  lateral force/moment contaminating driving-point FRFs), compares thin-rod vs. pretensioned
+  piano-wire stingers, notes stinger misalignment tolerance and its role as a mechanical fuse, and
+  gives a simple diagnostic (vary stinger length ±10%) for detecting stinger-induced measurement
+  error.
+- **Relevance to P4P:** Directly relevant companion to the McConnell & Cappa stinger paper above —
+  practical, hands-on guidance (transducer mounting orientation, alignment procedure, thin-rod vs.
+  piano-wire tradeoffs) for correctly implementing and troubleshooting the P4P stinger rig, as
+  opposed to the more theoretical/correction-focused treatment in that paper. Not yet distilled
+  into knowledge/ notes — recommended follow-up: fold into [[06_stinger_design_analysis]].
 
 ### validationofRWdisturbancemodel.pdf
 - **Title:** Development and validation of reaction wheel disturbance models: empirical model
