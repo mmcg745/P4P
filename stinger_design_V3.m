@@ -606,7 +606,7 @@ function s = pass_str(pass)
 end
 %% =========================================================================
 %  OPTIMISATION — Sweep d and L independently and in combination
-%  Finds all geometry combinations that pass all four checks
+%  Finds all geometry combinations that pass all five checks
 % =========================================================================
 
 fprintf('\n=================================================================\n');
@@ -621,7 +621,7 @@ L_ax_range  = (30:5:175)   * 1e-3;    % axial length [m]
 L_rad_range = (30:5:175)   * 1e-3;    % radial length [m]
 
 % --- Storage for feasible solutions ---
-results = [];  % each row: [d_ax, d_rad, L_ax, L_rad, fn_ax, fn_rad, ratio_ax, ratio_rad, SF_bk_ax, SF_bk_rad, SF_y_ax, SF_y_rad]
+results = [];  % each row: [d_ax, d_rad, L_ax, L_rad, fn_ax, fn_rad, ratio_ax, ratio_rad, SF_bk_ax, SF_bk_rad, SF_y_ax, SF_y_rad, fn_comb_ax, fn_comb_rad]
 
 n_total = length(d_ax_range)*length(d_rad_range)*length(L_ax_range)*length(L_rad_range);
 fprintf('  Evaluating %d combinations...\n\n', n_total);
@@ -680,6 +680,11 @@ for d_ax = d_ax_range
                 sig_rad_i    = (F_bend_rad_i*L_rad*d_rad/2)/I_rad_i;
                 SF_y_rad_i   = sigma_y/max(sig_rad_i, 1e-10);
 
+                % --- CHECK 5 — Transducer-inertia/stinger resonance ---
+                % (McConnell & Cappa, 2000) — see CHECK 5 in main sections above.
+                fn_comb_ax_i  = (1/(2*pi))*sqrt(k_ax_i/3 / m_transducer);
+                fn_comb_rad_i = (1/(2*pi))*sqrt(k_rad_i / m_transducer);
+
                 % --- CHECK ALL TARGETS ---
                 pass_fn_ax  = fn_ax_i  >= fn_target;
                 pass_fn_rad = fn_rad_i >= fn_target;
@@ -689,11 +694,14 @@ for d_ax = d_ax_range
                 pass_bk_rad = SF_bk_rad_i >= SF_buckle_target;
                 pass_y_ax   = SF_y_ax_i   >= SF_yield_target;
                 pass_y_rad  = SF_y_rad_i  >= SF_yield_target;
+                pass_fn5_ax  = fn_comb_ax_i  >= fn_target;
+                pass_fn5_rad = fn_comb_rad_i >= fn_target;
 
                 all_pass_i = pass_fn_ax && pass_fn_rad && ...
                              pass_rt_ax && pass_rt_rad && ...
                              pass_bk_ax && pass_bk_rad && ...
-                             pass_y_ax  && pass_y_rad;
+                             pass_y_ax  && pass_y_rad && ...
+                             pass_fn5_ax && pass_fn5_rad;
 
                 if all_pass_i
                     results(end+1,:) = [d_ax*1000, d_rad*1000, ...
@@ -701,7 +709,8 @@ for d_ax = d_ax_range
                                         fn_ax_i, fn_rad_i, ...
                                         ratio_ax_i, ratio_rad_i, ...
                                         SF_bk_ax_i, SF_bk_rad_i, ...
-                                        SF_y_ax_i, SF_y_rad_i]; %#ok
+                                        SF_y_ax_i, SF_y_rad_i, ...
+                                        fn_comb_ax_i, fn_comb_rad_i]; %#ok
                 end
             end
         end
@@ -719,15 +728,15 @@ else
     results = sortrows(results, 5);
 
     fprintf('  Top 10 feasible combinations (sorted by axial fn):\n\n');
-    fprintf('  d_ax  d_rad  L_ax  L_rad | fn_ax  fn_rad | ratio_ax ratio_rad | SF_bk_ax SF_y_ax\n');
-    fprintf('  [mm]  [mm]   [mm]  [mm]  | [Hz]   [Hz]   |                   |                  \n');
-    fprintf('  ---------------------------------------------------------------------------------\n');
+    fprintf('  d_ax  d_rad  L_ax  L_rad | fn_ax  fn_rad | ratio_ax ratio_rad | SF_bk_ax SF_y_ax | fn_cmb_ax fn_cmb_rad\n');
+    fprintf('  [mm]  [mm]   [mm]  [mm]  | [Hz]   [Hz]   |                   |                  | [Hz]      [Hz]\n');
+    fprintf('  ------------------------------------------------------------------------------------------------------\n');
 
     n_show = min(10, size(results,1));
     for i = 1:n_show
         r = results(i,:);
-        fprintf('  %4.1f  %4.1f   %4.0f  %4.0f  | %6.1f %6.1f | %8.0f %8.0f | %7.1f  %6.1f\n', ...
-            r(1), r(2), r(3), r(4), r(5), r(6), r(7), r(8), r(9), r(11));
+        fprintf('  %4.1f  %4.1f   %4.0f  %4.0f  | %6.1f %6.1f | %8.0f %8.0f | %7.1f  %6.1f | %8.1f  %8.1f\n', ...
+            r(1), r(2), r(3), r(4), r(5), r(6), r(7), r(8), r(9), r(11), r(13), r(14));
     end
 
     fprintf('\n  Best combination (lowest fn_axial that passes all checks):\n');
@@ -742,6 +751,8 @@ else
     fprintf('    Stiffness ratio radial = %.0f\n', r(8));
     fprintf('    Buckling SF axial  = %.1f\n', r(9));
     fprintf('    Yield SF axial     = %.1f\n', r(11));
+    fprintf('    Transducer-stinger resonance axial  = %.1f Hz\n', r(13));
+    fprintf('    Transducer-stinger resonance radial = %.1f Hz\n', r(14));
 
     % --- PLOTS ---
 
