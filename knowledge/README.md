@@ -30,3 +30,7 @@ Source documents:
 
 Notes use `[[name]]`-style cross-links between related sections (readable as plain markdown; not
 wiki-link-rendering software).
+
+- `readings/INDEX.md` — a quick-reference dictionary of the 20 source PDFs in `knowledge/readings/`
+  (title, authors, topic tags, summary, relevance to P4P), so their content can be looked up
+  without opening each PDF.

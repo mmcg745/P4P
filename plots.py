@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -12,7 +13,8 @@ mpl.rcParams.update({
     "grid.alpha": 0.3,
 })
 
-OUT = "/mnt/user-data/outputs"
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "outputs")
+os.makedirs(OUT, exist_ok=True)
 
 # -------------------------------------------------------------------------
 # 1. FEA modal data (from the .xls exports in the repo)

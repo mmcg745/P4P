@@ -12,7 +12,9 @@ project workspace rather than a single-purpose codebase.
   everyday reference for context — short, linked, and safe to read whenever relevant.
 - `knowledge/readings/` — the underlying source PDFs (papers, theses, reports) that the notes in
   `knowledge/` were distilled from. **Don't read these by default.** They're long and mostly
-  redundant with the notes above. Only open specific files here when:
+  redundant with the notes above. Check `knowledge/readings/INDEX.md` first — it's a
+  quick-reference dictionary summarizing what each paper covers, so you can decide whether a full
+  PDF is worth opening before reading it. Only open specific files here when:
   - the distilled notes don't have enough detail to answer a question,
   - you need an exact citation, figure, or equation from the original source,
   - the task involves future outlook / what's next for the project, or
