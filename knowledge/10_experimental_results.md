@@ -9,8 +9,17 @@ the wrench model in [[05_mathematical_model]].
 - **Wheel:** a 3D-printed PLA test flywheel, 105.97 g. It is Ø150 mm and 25 mm thick, with a spoked
   centre (pocket R55) and a rim with 24 M8×1.25 tapped holes through its full 25 mm thickness.
   Drawing: `P4P Shared/flywheel_test.pdf`. CAD: `P4P Shared/P4P Concept CAD/3D Prints/flywheel_*`.
-- **Conditions:** `balanced` (weights equally spaced) and `imbalanced_1A` (one M8 socket-head cap
-  screw, **9.56 g**, added in a rim hole).
+- **Bolts:** M8 socket-head cap screws, **9.56 g** each, in the rim holes on the 65 mm pitch radius
+  (the holes are 15° apart). Bolt positions are marked on `flywheel_test.pdf` (red = balanced set,
+  blue = added bolt).
+  - `balanced`: 16 bolts, 8 screwed in from the top and 8 from the bottom, in the same 8 holes. The
+    8 positions are 15°, 75°, 105°, 165°, 195°, 255°, 285° and 345°, measured from the 3 o'clock
+    hole. That's a pair either side of each of 0°, 90°, 180° and 270°, so the set is balanced.
+    The wheel plus bolts is about 259 g.
+  - `imbalanced_1A`: the balanced set plus **one** bolt, screwed in from the **top side only**, in
+    the 3 o'clock hole (0°, between the right-hand pair). This adds a static imbalance of
+    9.56 g × 65 mm = 621 g·mm. Because the bolt is near the top face, not the wheel's mid-plane,
+    it also adds a small couple (dynamic imbalance), which is outside the scope of this analysis.
 - **Runs:** 300, 450, 600 and 750 rpm, 3 trials each. Each run starts at rest, ramps at 37.5 rpm/s,
   holds, then stops. There is no tach or encoder, so speed comes from the ramp rate and the motor
   start time.
@@ -83,8 +92,8 @@ imbalance would not do. The single-resonance fit above matches well:
 - **The axial-only moment divided by the radial force is about 0.10 m.** This first run had zr = 0,
   so the moments came from the axial sensors only. With zr = 150 mm now set, the rerun's Mx/Fy
   gives the height of the imbalance force above the axial plane: about 0.05 m or 0.25 m, depending
-  on sign. Compare this with the real height of the wheel; an impossible value means a sensor sign
-  is flipped.
+  on sign. Compare this with the real height of the **added bolt** (near the wheel's top face, not
+  its mid-plane). An impossible value means a sensor sign is flipped.
 
 ## Open items
 
