@@ -28,7 +28,7 @@ the wrench model in [[05_mathematical_model]].
   sensors Az1–3 are TAS510 10 kg strain gauges on an NI 9237.
 - **Data and script:** `P4P Shared/DAQ/P4P NI DAQ/11_10_26_tests/`, analysed with
   `analyze_rwa_campbell.m`. Output, including `summary.csv` and the figures, is in
-  `analysis_output/`. The older `LogFile_2026-09-21*` and `LogFile_2026-10-09*` files are not used.
+  `analysis_output_zr0/` (first run, zr = 0; reruns go to `analysis_output/`). The older `LogFile_2026-09-21*` and `LogFile_2026-10-09*` files are not used.
 
 ## Results
 
@@ -98,8 +98,8 @@ imbalance would not do. The single-resonance fit above matches well:
 ## Open items
 
 - Geometry now set in the script: zr = 150 mm, xRy = 0 (Ry1 is in the middle of the mounting
-  plate), Rx spacing = 105 mm. Still to check: whether Rx1/Rx2 are centred on the spin axis, and
-  the sign of the radial piezo sensors.
+  plate), Rx spacing = 105 mm, with Rx1/Rx2 centred 52.5 mm either side of the spin axis. Still to
+  check: the sign of the radial piezo sensors.
 - Rerun the script with this geometry to get correct Mx/My.
 - Rerun with `cfg.fMax = 100` and `cfg.campWinSec = 2` to see the 1× to 3× orders and any band
   near 24 Hz.
