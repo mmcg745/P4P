@@ -27,6 +27,8 @@ Source documents:
    results
 9. [08_next_steps.md](08_next_steps.md) — planned tasks and open items
 10. [09_references.md](09_references.md) — full reference list
+11. [10_experimental_results.md](10_experimental_results.md) — first spin tests (2026-10-11):
+    bolt imbalance validated, ~24 Hz resonance, open items
 
 Notes use `[[name]]`-style cross-links between related sections (readable as plain markdown; not
 wiki-link-rendering software).
