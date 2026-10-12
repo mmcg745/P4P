@@ -1,0 +1,6 @@
+# 2026-10-13 — Washer imbalance tests to 1900 rpm and analysis
+
+- **Asked:** run the remaining tests (1/2 step: balanced 1000/1500 rpm, balanced and washer 1500 rpm sweeps, washer at 300–1500 rpm, and a 2000 rpm attempt at full step), then analyse everything.
+- **Did:** set the Tic values for 1/2 step (accel 25000 = 37.5 rpm/s, 10000 = 15 rpm/s; max speed = rpm × 66666.67). In `analyze_rwa_campbell.m`: added 1000/1500 rpm steps and a 1500 rpm sweep, set sweeps to 15 rpm/s, accepted `SWEEP_` names, added the `imbalanced_1W` condition with an expected U per condition (`cfg.addedMass_g`), and added a per-run `accel` override. Ran the full analysis with figures hidden. Analysed the 2000 rpm run (75 rpm/s, cut at ~1860–1900 rpm) separately with a scratch script and saved `analysis_output/approach_to_resonance_2000rpm.png`. Recorded the results as Finding 5 in `knowledge/10_experimental_results.md`.
+- **Results:** washer U₀ = 103.2 g·mm (expected 96.2) and fₙ = 38.8 Hz from the sweeps, matching the tap test. The 2000 rpm ramp follows the model (297 vs 309 g·mm at 1900 rpm). The balanced residual varies between sessions (4–41 g·mm).
+- **Notes:** ask the user what changed between the 13 Oct balanced steps (~09:25, residual 4–5 g·mm) and the balanced sweep (~10:10, 17–18 g·mm). Several 1×-ridge "noisy" warnings on balanced runs are expected (weak 1×).

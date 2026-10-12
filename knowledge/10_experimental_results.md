@@ -189,6 +189,44 @@ design convention; fixed ends give 4× more.
   ±0.29 N static. The Fz amplitudes at the spin frequency (0.02–0.19 N) are below that, so Fz at
   1× is near the limit of what these sensors can resolve.
 
+## Finding 5: steel brackets, washer imbalance to 1900 rpm (12–13 Oct)
+
+Data: `12_10_26_tests/`, output in `analysis_output/`. Steel radial brackets fitted, Tic at 1/2 step,
+37.5 rpm/s steps and 15 rpm/s sweeps. The washer is one M8 washer, **1.48 g**, under an existing
+top bolt head at r = 65 mm, so expected **96.2 g·mm**. Every run started with the washer at
+6 o'clock (−Y).
+
+- **Tap tests:** the lowest modes are now **38.8 Hz** (Fx/My), **47.9 Hz** (Fy/Mx) and 41.4 Hz
+  (Mz), up from 24.9/22.2 Hz with the PLA brackets. Tapping the top plate excites mainly
+  39/47 Hz, so these modes involve large motion at the top of the RWA. Noise at the spin
+  frequency is equivalent to only 0.02–0.2 g·mm. Fz has 50 Hz mains pickup.
+- **Washer, mean of 2 trials (trials agree within ~2%):**
+
+| rpm | 300 | 450 | 600 | 1000 | 1500 |
+|---|---|---|---|---|---|
+| U (g·mm) | 105.0 | 106.0 | 109.7 | 126.4 | 180.2 (sweep hold: 180.0) |
+
+- **Resonance fit to the 1500 rpm sweeps:** **U₀ = 103.2 g·mm** (expected 96.2, +7%) and
+  **fₙ = 38.8 Hz**. That's the same frequency as the tap-test x-mode, so two independent methods
+  agree. The +7% is within what the residual imbalance (4–18 g·mm, see below) can add as a vector
+  at an unknown angle.
+- **Approach to resonance:** the 2000 rpm run (full step, 75 rpm/s, cut at about 1860–1900 rpm)
+  follows the model from the 1500 rpm sweeps: measured/model U = 124/127 at 1000 rpm, 175/177 at
+  1500, and 297/309 at 1900 rpm. That's about 3× amplification at 1900 rpm (31.7 Hz).
+  Figure: `analysis_output/approach_to_resonance_2000rpm.png`.
+- **The balanced residual is not stable between sessions:** about 20 g·mm (11 Oct), 37–41
+  (12 Oct evening), 4–5 (13 Oct, 1000/1500 rpm steps at ~09:25) and 17–18 (13 Oct sweeps at
+  ~10:10). Ramp tracking shows each session's value is roughly constant with speed, so the wheel or
+  bolt assembly itself is shifting between sessions. The rig resolves changes of a few g·mm. The
+  assembly's repeatability, not the sensor noise, limits the calibration.
+- **Amplification with steel brackets:** about 1.02× at 300 rpm, 1.07× at 600, 1.22× at 1000 and
+  1.75× at 1500 rpm (from the U₀ fit).
+- **Operating issues:** a loud whine at ~750 rpm with the Tic T500 (also with the balanced wheel,
+  so it's motor or drive, not structure); 750 rpm was skipped. Deceleration caused "VIN too low"
+  cut-outs; the runs used de-energise and coast instead. The step-ramp tracked-U curves in
+  `imbalance_vs_speed_tracked.png` average runs from different sessions and top speeds, so use the
+  sweep curves.
+
 ## Open items
 
 - Geometry is now complete in the script: zr = 140 mm (from the base plate), xRy = 0 (Ry1 is in the
