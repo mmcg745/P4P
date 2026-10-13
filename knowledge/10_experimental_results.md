@@ -227,6 +227,58 @@ top bolt head at r = 65 mm, so expected **96.2 g·mm**. Every run started with t
   `imbalance_vs_speed_tracked.png` average runs from different sessions and top speeds, so use the
   sweep curves.
 
+## Why the measured imbalance rises with speed (poster-ready explanation)
+
+Terminology used on the poster: **"baseline wheel"** = the `balanced` condition (3D-printed
+flywheel with a symmetric bolt ring, not precision-balanced, so it has a small residual
+imbalance). **"Known / induced 1.48 g imbalance"** = the `imbalanced_1W` washer condition.
+
+**The true static imbalance does not change with speed.** The *measured* U = F₁ₓ/ω² rises
+because the sensors measure the force carried by the stingers, not the imbalance force itself,
+and the structure they support can move.
+
+- The imbalance produces a rotating force F₀ = U·ω² on the ~1 kg supported assembly (wheel,
+  motor, frame, mounting plate). The stingers and brackets act as springs, so the assembly is a
+  mass on a spring with a lateral natural frequency **fₙ = 38.8 Hz** (steel brackets).
+- Well below fₙ the platform barely moves, and the stingers carry exactly F₀.
+- As the spin frequency approaches fₙ, the assembly sways in phase with the rotating force. The
+  stingers must also supply the force that accelerates this moving mass, so they carry more than
+  F₀. The sensors read the force transmitted through the structure, not the imbalance force alone.
+- Single-degree-of-freedom model (light damping):
+  **U_measured = U_true / (1 − (f/fₙ)²)**
+
+| Speed | f (Hz) | f/fₙ | Amplification 1/(1−(f/fₙ)²) |
+|---|---|---|---|
+| 300 rpm | 5.0 | 0.13 | 1.02 |
+| 600 rpm | 10.0 | 0.26 | 1.07 |
+| 1000 rpm | 16.7 | 0.43 | 1.23 |
+| 1500 rpm | 25.0 | 0.64 | 1.71 |
+| 1900 rpm | 31.7 | 0.82 | 3.0 |
+| 2330 rpm | 38.8 | 1.00 | very large (limited only by damping) |
+
+**Evidence that this is the cause, not a calibration or analysis error:**
+1. The fₙ fitted from the spin data (38.8 Hz, 1500 rpm sweeps with the known 1.48 g mass) equals
+   the platform's X-mode from the independent tap test (38.8 Hz).
+2. The same model, fitted only up to 1500 rpm, predicts the separate 75 rpm/s ramp to ~1900 rpm:
+   297 g·mm measured vs 309 predicted at 1900 rpm.
+3. Softer supports gave a faster rise. With the original PLA brackets (fₙ ≈ 24 Hz), U rose about
+   40% by 750 rpm; with steel brackets (38.8 Hz) the rise at 750 rpm is only about 12%.
+4. With the resonance removed, U₀ = 103.2 g·mm against the expected 96.2 g·mm (+7%, within the
+   wheel's residual imbalance). At low speed, where amplification is ~2%, the raw reading is
+   already 105 g·mm.
+
+**Implication for the device:** a force platform only reads true forces well below its first
+natural frequency (rule of thumb: fₙ ≥ 3× the highest measurement frequency, hence the 500 Hz
+design target in [[06_stinger_design_analysis]]). Two remedies:
+- correct the readings, U_true = U_measured × (1 − (f/fₙ)²), which is what the U₀ fit does; or
+- stiffen the structure so fₙ is far above the speed range. The tap tests point to the RWA's own
+  frame (threaded rods holding the top plate) as the next soft part.
+
+One-sentence poster version: *"The rise in measured imbalance with speed is not the wheel
+changing; it is the test structure's 38.8 Hz lateral mode amplifying the transmitted force as
+1/(1−(f/fₙ)²), which is confirmed independently by tap testing and corrected for in the
+fitted U₀."*
+
 ## Open items
 
 - Geometry is now complete in the script: zr = 140 mm (from the base plate), xRy = 0 (Ry1 is in the
