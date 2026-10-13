@@ -51,7 +51,7 @@ the spin frequency. Values below are means of 3 trials:
 Expected bolt imbalance = 9.56 g × 65 mm (hole pitch radius, from `flywheel_test.pdf`) =
 **621 g·mm**.
 
-Fitting U(f) = U₀ / (1 − (f/fₙ)²) to the imbalanced means gives **U₀ = 613 g·mm**, which is within
+Fitting U(f) = U₀ / (1 − (f/fₙ)²) to the imbalanced means gives **U₀ = 613 g·mm** (650 g·mm after the 14 Oct Ry1 sensor correction, see below), which is within
 about 1.3% of the expected value. The fit residuals are all within 0.8%. The balanced residual of
 about 20 g·mm (3% of the bolt) is within the uncertainty from how the residual and the bolt add as
 vectors. The force calibration and the imbalance method therefore check out.
@@ -130,9 +130,8 @@ the ~24 Hz mode rocks the setup and adds inertial moments.
 **Stingers:** all steel wire, 95 mm long bolt head to bolt head. Axial stingers are Ø1.2 mm and
 radial stingers Ø0.8 mm. The design and FEA used Ø2 mm × 50 mm ([[06_stinger_design_analysis]]).
 
-**Supported mass:** **~1.0 kg** = 807.1 g (RWA with wiring) + 192.6 g (mounting plate). The 807.1 g
-weighing included the driver board, which is **not** on the platform, so the true moving mass is a
-little lower. Subtract the board's mass when known.
+**Supported mass:** **~993 g** = 807.1 g (RWA with wiring and driver board) + 192.6 g (mounting
+plate) − ~7 g (driver board, which is **not** on the platform).
 
 | Part | Mass (g) | CoM height above base plate (mm) |
 |---|---|---|
@@ -140,7 +139,7 @@ little lower. Subtract the board's mass when known.
 | stepper motor | ~240 (230–250) | ~125 (mounted at 145, body hangs below) |
 | flywheel + 16 bolts | 258.9 (+9.56 for 1A) | 217.5 |
 | shaft (8 × 105 mm, stainless steel) | ~42 (calculated) | ~210 |
-| remainder (frame, rods, coupling, wiring, board) | ~266 (by difference) | ~200 (guess) |
+| remainder (frame, rods, coupling, wiring) | ~259 (by difference, board excluded) | ~200 (guess) |
 | **total** | **~1000** | **~175** |
 
 The heights are estimates and the CAD masses aren't realistic, so treat the ~175 mm centre of
@@ -155,8 +154,9 @@ mass as approximate.
   (the top face is 0.23 m) and h_moving ≈ **0.166 m**, close to the whole assembly's estimated
   centre of mass (~0.175 m). If only the wheel and shaft were whirling, h_moving would be about
   0.21 m. This is consistent evidence, not proof.
-- **Lateral stiffness:** treating it as ~1.0 kg on a spring, k = m(2πfₙ)² gives about **25 kN/m in x
-  (24.9 Hz) and 20 kN/m in y (22.2 Hz)**. The FEA's 334 Hz with 1 kg implies about 4.4 MN/m, so the
+- **Lateral stiffness:** treating it as ~0.99 kg on a spring, k = m(2πfₙ)² gives about **24 kN/m in x
+  (24.9 Hz) and 19 kN/m in y (22.2 Hz)**. With the steel brackets (38.8 / 47.9 Hz) it is about
+  59 / 90 kN/m. The FEA's 334 Hz with 1 kg implies about 4.4 MN/m, so the
   real rig is roughly **180–225 times softer** than modelled.
 - **The wire stingers are not the soft part.** Their axial stiffness is EA/L ≈ 1.06 MN/m for each
   radial stinger and 2.38 MN/m for each axial one. On their own, the radial wires would put the
@@ -200,32 +200,71 @@ top bolt head at r = 65 mm, so expected **96.2 g·mm**. Every run started with t
   (Mz), up from 24.9/22.2 Hz with the PLA brackets. Tapping the top plate excites mainly
   39/47 Hz, so these modes involve large motion at the top of the RWA. Noise at the spin
   frequency is equivalent to only 0.02–0.2 g·mm. Fz has 50 Hz mains pickup.
-- **Washer, mean of 2 trials (trials agree within ~2%):**
+- **Washer, mean of 2 trials** (trials agree within ~1.5%; values **with the Ry1 sensor
+  correction**, see the next section; the uncorrected values were about 5% lower):
 
 | rpm | 300 | 450 | 600 | 1000 | 1500 |
 |---|---|---|---|---|---|
-| U (g·mm) | 105.0 | 106.0 | 109.7 | 126.4 | 180.2 (sweep hold: 180.0) |
+| U (g·mm) | 110.2 | 111.4 | 115.3 | 131.7 | 189.0 (sweep hold: 188.5) |
 
-- **Resonance fit to the 1500 rpm sweeps:** **U₀ = 103.2 g·mm** (expected 96.2, +7%) and
-  **fₙ = 38.8 Hz**. That's the same frequency as the tap-test x-mode, so two independent methods
-  agree. The +7% is within what the residual imbalance (4–18 g·mm, see below) can add as a vector
-  at an unknown angle.
+- **Resonance fit to the 1500 rpm sweeps:** **U₀ = 108.5 g·mm** (expected 96.2, +13%) and
+  **fₙ = 39.0 Hz**. That's the same frequency as the tap-test x-mode (38.8 Hz), so two
+  independent methods agree. The +13% is within what the residual imbalance (4–18 g·mm, see
+  below) can add as a vector at an unknown angle (96.2 ± 18 → 78–114 g·mm). Uncorrected, it was
+  103.2 g·mm (+7%) with fₙ = 38.8 Hz.
 - **Approach to resonance:** the 2000 rpm run (full step, 75 rpm/s, cut at about 1860–1900 rpm)
-  follows the model from the 1500 rpm sweeps: measured/model U = 124/127 at 1000 rpm, 175/177 at
-  1500, and 297/309 at 1900 rpm. That's about 3× amplification at 1900 rpm (31.7 Hz).
-  Figure: `analysis_output/approach_to_resonance_2000rpm.png`.
+  follows the model from the 1500 rpm sweeps: measured/model U = 130/133 at 1000 rpm, 184/184 at
+  1500, and 310/319 at 1900 rpm. That's about 3× amplification at 1900 rpm (31.7 Hz).
+  Figure: `analysis_output/approach_to_resonance_2000rpm.png` (regenerated 14 Oct with the
+  correction).
 - **The balanced residual is not stable between sessions:** about 20 g·mm (11 Oct), 37–41
   (12 Oct evening), 4–5 (13 Oct, 1000/1500 rpm steps at ~09:25) and 17–18 (13 Oct sweeps at
   ~10:10). Ramp tracking shows each session's value is roughly constant with speed, so the wheel or
   bolt assembly itself is shifting between sessions. The rig resolves changes of a few g·mm. The
   assembly's repeatability, not the sensor noise, limits the calibration.
-- **Amplification with steel brackets:** about 1.02× at 300 rpm, 1.07× at 600, 1.22× at 1000 and
-  1.75× at 1500 rpm (from the U₀ fit).
+- **Amplification with steel brackets:** about 1.02× at 300 rpm, 1.07× at 600, 1.21× at 1000 and
+  1.74× at 1500 rpm (from the U₀ fit).
 - **Operating issues:** a loud whine at ~750 rpm with the Tic T500 (also with the balanced wheel,
   so it's motor or drive, not structure); 750 rpm was skipped. Deceleration caused "VIN too low"
-  cut-outs; the runs used de-energise and coast instead. The step-ramp tracked-U curves in
-  `imbalance_vs_speed_tracked.png` average runs from different sessions and top speeds, so use the
-  sweep curves.
+  cut-outs; the runs used de-energise and coast instead. Since 14 Oct, the step ramps in
+  `imbalance_vs_speed_tracked.png` are drawn per run rather than averaged (averaging runs with
+  different top speeds and sessions caused false jumps). The sweep curves are the cleanest.
+
+## Sensor correction: Ry1 (208C02) reads ~11% low (applied 14 Oct)
+
+- Rx1/Rx2 (208C01) were calibrated by a technician and are the reference. Ry1 (208C02) uses a
+  non-professionally set sensitivity of 0.011241 V/N. The spec sheets give only nominal values
+  (±15%), with no serial-specific certificate.
+- **Evidence:** a rotating imbalance force must give |Fx| = |Fy| well below resonance. After
+  removing the different x/y resonance amplification, Fx/Fy = **1.11** at 300–600 rpm in both the
+  11 Oct runs (PLA brackets, bolt) and the 13 Oct runs (steel brackets, 1.48 g mass), with
+  n = 15 and sd 0.02. Because it is the same on two different structures, it is the sensor, not
+  the rig.
+- **Applied** as `cfg.sensorScale = [1 1 1.11 1 1 1]` in `analyze_rwa_campbell.m`. Both test folders
+  were re-analysed; Fx/Fy is now 0.97–1.03 for the imbalance runs at 300–600 rpm.
+- **Effect:** U rises by about 5%. Bolt (11 Oct, PLA): **U₀ = 650 g·mm vs 621 expected (+4.6%)**,
+  fₙ = 23.9 Hz (uncorrected 613, −1.3%). Known 1.48 g mass (13 Oct, steel): **U₀ = 108.5 vs 96.2
+  (+13%)**, fₙ = 39.0 Hz (uncorrected 103.2, +7%). The bolt result is the cleaner calibration check
+  because its residual is only ~3% of the bolt. It suggests absolute accuracy of about ±5%, set by
+  the Rx calibration and the residual imbalance.
+
+## Finding 6: the imbalance angle is recoverable without a tach (14 Oct)
+
+- All 13 Oct known-mass runs started with the mass at 6 o'clock (−Y, −90°). The Tic stepper is
+  open-loop, so the wheel angle follows from the start time and the constant ramp:
+  θ(t) = π(α/60)(t − t₀)². The 1× force phasor (Fx + iFy) is demodulated against θ in 1 s windows
+  at 150–450 rpm during the ramp.
+- **The wheel spins clockwise in top view** (all runs).
+- A start-time error δ adds ω·δ to the phase, i.e. a term proportional to rpm. Fitting phase
+  against rpm and taking the **0 rpm intercept** removes it. The implied start-time errors are
+  0.002–0.045 s.
+- **Result (12 runs, 300–1500 rpm steps plus 2 sweeps): imbalance angle at start = −79.6° ± 9.7°
+  (circular std), against −90° expected.** The ~10° offset is consistent with the residual
+  imbalance (up to ±11° for 18 g·mm against 96 g·mm) and with the mass sitting on a bolt-ring hole
+  rather than exactly at 6 o'clock (the ring holes nearest 6 o'clock are at ±15°).
+- Script: `daq_analysis/phase_check.m` (snapshot of the scratch analysis). Note for future work:
+  a once-per-rev tach would give the phase directly and allow vector subtraction of the residual
+  imbalance.
 
 ## Why the measured imbalance rises with speed (poster-ready explanation)
 
@@ -257,15 +296,15 @@ and the structure they support can move.
 | 2330 rpm | 38.8 | 1.00 | very large (limited only by damping) |
 
 **Evidence that this is the cause, not a calibration or analysis error:**
-1. The fₙ fitted from the spin data (38.8 Hz, 1500 rpm sweeps with the known 1.48 g mass) equals
+1. The fₙ fitted from the spin data (39.0 Hz, 1500 rpm sweeps with the known 1.48 g mass) matches
    the platform's X-mode from the independent tap test (38.8 Hz).
 2. The same model, fitted only up to 1500 rpm, predicts the separate 75 rpm/s ramp to ~1900 rpm:
-   297 g·mm measured vs 309 predicted at 1900 rpm.
+   310 g·mm measured vs 319 predicted at 1900 rpm.
 3. Softer supports gave a faster rise. With the original PLA brackets (fₙ ≈ 24 Hz), U rose about
    40% by 750 rpm; with steel brackets (38.8 Hz) the rise at 750 rpm is only about 12%.
-4. With the resonance removed, U₀ = 103.2 g·mm against the expected 96.2 g·mm (+7%, within the
-   wheel's residual imbalance). At low speed, where amplification is ~2%, the raw reading is
-   already 105 g·mm.
+4. With the resonance removed, U₀ = 108.5 g·mm against the expected 96.2 g·mm (+13%, within the
+   wheel's residual imbalance of up to ~18 g·mm). At low speed, where amplification is ~2%, the raw
+   reading is already 110 g·mm. These values use the Ry1 sensor correction (+11% on Fy).
 
 **Implication for the device:** a force platform only reads true forces well below its first
 natural frequency (rule of thumb: fₙ ≥ 3× the highest measurement frequency, hence the 500 Hz
@@ -284,10 +323,9 @@ fitted U₀."*
 - Geometry is now complete in the script: zr = 140 mm (from the base plate), xRy = 0 (Ry1 is in the
   middle of the mounting plate), Rx spacing = 105 mm (Rx1/Rx2 centred 52.5 mm either side of the
   spin axis). Sensor signs are confirmed.
-- Supported mass recorded (~1.0 kg). Still to get: the driver board's mass, to subtract it from
-  the total.
-- Steel radial brackets are being sourced (this is conceptual testing). Rerun the same speeds after
-  fitting them and check that U flattens toward 621 g·mm.
+- Supported mass recorded: ~993 g, with the ~7 g driver board subtracted.
+- Steel radial brackets fitted 12 Oct; results are in Finding 5. The next soft part appears to be
+  the RWA frame (threaded rods and top plate).
 - Find the soft spot: brace or clamp the PLA radial brackets and rerun 750 rpm. If U drops toward
   621 g·mm, the brackets are the cause. A phone accelerometer FFT (e.g. phyphox) while tapping the
   mounting plate sideways should show the ~22–25 Hz mode.

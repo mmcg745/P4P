@@ -5,6 +5,18 @@ microvibration and torque measurement device for reaction wheel assemblies). It 
 knowledge, analysis code, and design data — not just one deliverable — so treat it as a general
 project workspace rather than a single-purpose codebase.
 
+## Main P4P folder (outside this repo)
+
+Pretty much all P4P project information (reports, data, CAD, test results, admin, etc.) lives in
+`C:\Users\matth\OneDrive - The University of Auckland\Part IV\P4P`. Look there when something
+isn't in this repo.
+
+To navigate it, read the `INDEX.md` in the folder's root first. Every folder and subfolder has its
+own `INDEX.md`, which describes the files there and links down to the child folders' indexes.
+Descend through these instead of listing or opening files blindly. When files are added or moved
+there, update the affected `INDEX.md`. An older flat overview also exists in
+`knowledge/p4p-folder-index/`.
+
 ## What's here
 
 - `knowledge/` — distilled project notes (scope, literature review, math model, design analysis,
@@ -22,18 +34,14 @@ project workspace rather than a single-purpose codebase.
 - `*.m` — MATLAB scripts for the stinger design calculations and parametric/optimisation sweeps
   (`stinger_design_V3.m` is the current version; earlier `V2`/base versions are kept for history).
 - `modal_plots.m` / `plots.py` — plotting scripts for FEA and analytical parametric study results.
+- `daq_analysis/` — version-controlled snapshots of the rig-test MATLAB scripts
+  (`analyze_rwa_campbell.m`, `analyze_tap_test.m`). The working copies and the test data live in
+  the shared OneDrive DAQ folder; see `daq_analysis/README.md`.
 - `excel data/` — raw ANSYS modal analysis exports (tab-delimited, `.xls` in name only) used by
   the plotting scripts.
 - Loose `.png` files — figures generated from the above.
 - `log/` — dated session log of what's been asked for and done in this repo. See
   `log/README.md` for format.
-
-## Logging (mandatory)
-
-At the end of any session where work is done in this repo — code, data, docs, plots, or
-decisions, not just knowledge-file edits — add a new dated entry to `log/` following the format
-in `log/README.md`. This is required, not optional: it's how continuity across sessions is
-maintained. Do this before finishing up, not as an afterthought if asked.
 
 ## Working with this repo
 

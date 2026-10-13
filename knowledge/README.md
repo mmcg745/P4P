@@ -36,3 +36,5 @@ wiki-link-rendering software).
 - `readings/INDEX.md` — a quick-reference dictionary of the 20 source PDFs in `knowledge/readings/`
   (title, authors, topic tags, summary, relevance to P4P), so their content can be looked up
   without opening each PDF.
+- [p4p-folder-index/README.md](p4p-folder-index/README.md) — rough index of the main P4P OneDrive
+  folder (`...\Part IV\P4P`): reports, CAD, DAQ test data, readings, poster, admin docs.
