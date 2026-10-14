@@ -20,7 +20,7 @@ clear; clc; close all;
 
 scriptDir = fileparts(mfilename('fullpath'));
 if isempty(scriptDir), scriptDir = pwd; end
-cfg.testFolder   = '12_10_26_tests';            % <<< change this for each test session
+cfg.testFolder   = '15_10_26_tests';            % <<< change this for each test session
 cfg.dataFolder   = fullfile(scriptDir, cfg.testFolder);
 cfg.filePattern  = 'TAP_*.csv';
 cfg.outputFolder = fullfile(cfg.dataFolder, 'tap_output');

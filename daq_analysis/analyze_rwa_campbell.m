@@ -15,6 +15,9 @@
 %      type (step / sweep), plus a 0-cfg.fMaxLow Hz zoom with a longer window
 %   7) tracks the 1x force through each ramp and plots U vs speed continuously,
 %      with a single-resonance fit U = U0/(1-(f/fn)^2) per condition
+%   8) finds the imbalance ANGLE at the motor start without a tach (needs every run to start
+%      from the same wheel position) and subtracts the wheel's own residual imbalance as a
+%      vector from each added-mass condition
 %
 % Requires: Signal Processing Toolbox (pwelch, spectrogram, hann), R2019b+
 % (tiledlayout, exportgraphics, xline).
@@ -29,23 +32,28 @@ clear; clc; close all;
 % run in a way that hides its own path (e.g. code pasted into the command window).
 scriptDir = fileparts(mfilename('fullpath'));
 if isempty(scriptDir), scriptDir = pwd; end
-cfg.testFolder   = '12_10_26_tests';           % <<< change this for each test session
+cfg.testFolder   = '15_10_26_tests';           % <<< change this for each test session
 cfg.dataFolder   = fullfile(scriptDir, cfg.testFolder);
 cfg.outputFolder = fullfile(cfg.dataFolder, 'analysis_output');
 cfg.Fs           = 10000;                    % [Hz] FlexLogger sample rate
 
-cfg.speedsRPM  = [300 450 600 750 1000 1500];% commanded hold speeds (missing files are skipped)
-cfg.conditions = {'balanced', 'imbalanced_1A', 'imbalanced_1W'};
-% imbalanced_1A: one M8 cap screw (9.56 g) added from the top at r = 65 mm
-% imbalanced_1W: one M8 washer (1.48 g) under an existing top bolt head at r = 65 mm,
-%                started each run with the washer at 6 o'clock (-Y)
+cfg.speedsRPM  = [300 450 600 750 1000 1500 1800];% commanded hold speeds (missing files are skipped)
+% Conditions (any that have no files are skipped):
+%   balanced / baseline : the wheel as built (16-bolt ring), no added mass. 'balanced' is the
+%                         11-13 Oct name, 'baseline' the 15 Oct one
+%   imbalanced_1A       : one M8 cap screw (9.56 g) added from the top at r = 65 mm (11 Oct)
+%   imbalanced_1W       : one M8 washer (1.48 g) under a top bolt head at r = 65 mm, every run
+%                         started with the washer at 6 o'clock (-Y)
+%   imbalanced_1W_90deg : the same washer, started at 3 o'clock (+X) - checks the angle result
+%   baseline_end        : washer removed again at the end of the session (drift check)
+cfg.conditions = {'balanced', 'baseline', 'imbalanced_1A', 'imbalanced_1W', 'imbalanced_1W_90deg', 'baseline_end'};
 cfg.tests      = 1:3;                        % T1..T3
 cfg.fileFmt    = 'RPM%d_%s_T%d.csv';         % rpm, condition, test number
 cfg.accelRPMperS = 37.5;                     % constant spin-up acceleration [rpm/s]
                                              % Tic accel for 37.5 rpm/s: 100000 at 1/8 step, 25000 at 1/2 step
 
 % --- Slow sweeps for Campbell plots (optional; skipped if no files) ---
-cfg.sweepSpeedsRPM    = [750 1000 1500];     % top speed of each sweep
+cfg.sweepSpeedsRPM    = [750 1000 1500 1800];% top speed of each sweep
 cfg.sweepTests        = 1:3;
 cfg.sweepFileFmt      = 'SWEEP%d_%s_T%d.csv';% rpm, condition, test number
 cfg.sweepAccelRPMperS = 15;                  % sweep acceleration [rpm/s] (Tic accel 10000 at 1/2 step)
@@ -65,9 +73,15 @@ cfg.override.RPM_2000_imbalanced_1W_T1 = struct('accel', 75);
 cfg.sensorNames = {'Rx1', 'Rx2', 'Ry1', 'Az1', 'Az2', 'Az3'};
 cfg.sensorCols  = {'cDAQ1Mod1/ai0', 'cDAQ1Mod1/ai1', 'cDAQ1Mod1/ai2', ...
                    'cDAQ1Mod2/ai0', 'cDAQ1Mod2/ai1', 'cDAQ1Mod2/ai2'};
-% Sign convention: reading > 0 means the stinger is in TENSION (confirmed for the
-% axial strain gauges). >>> The sign of the radial piezo sensors is NOT confirmed.
-% Flip an entry to -1 if that sensor reads the opposite way. <<<
+% Sign convention. The axial strain gauges (TAS510) read > 0 in TENSION. The radial PCB
+% piezos read > 0 in COMPRESSION (PCB convention, seen in FlexLogger 14 Oct). Leave all +1:
+% the NET signs of this mapping (sensor sign x stinger direction x force-on-platform
+% convention) were validated on 11-14 Oct by two independent checks:
+%  (1) the moment/force heights Mx/Fy, My/Fx = 0.22-0.25 m match the added mass at the wheel
+%      top face (~0.23 m); a radial-vs-axial sign flip gives ~0.04 m, which is impossible
+%  (2) the imbalance angle at start = -80 deg for a mass placed at -90 deg; an overall
+%      radial sign flip would give ~+90 deg
+% Only change these if the stingers or sensors are re-mounted, and then repeat both checks.
 cfg.sensorSign  = [ 1  1  1    1  1  1];
 % Calibration corrections (F_true = F_exported * S_used / S_true).
 % Rx1/Rx2 (208C01) were calibrated by a technician and are taken as the reference.
@@ -120,9 +134,20 @@ cfg.trackBandHz   = 1.5;    % [Hz] the 1x power is summed over +/- this around t
 cfg.fitMinRPM     = 200;    % [rpm] lower speed limit for the resonance fit of U vs speed
 
 % --- Optional: expected imbalance of the added bolt(s) ---
-% Added mass [g] for each entry of cfg.conditions (NaN = none), all at the same radius.
-cfg.addedMass_g    = [NaN, 9.56, 1.48];
+% For each entry of cfg.conditions: added mass [g] (NaN = none), its angle at the start of
+% every run [deg, top view, 0 = 3 o'clock (+X), -90 = 6 o'clock (-Y); NaN = not controlled],
+% and the condition(s) holding the wheel's own residual imbalance, which is subtracted as a
+% vector (first one with data is used).
+cfg.addedMass_g    = [NaN, NaN, 9.56, 1.48, 1.48, NaN];
+cfg.addedAngleDeg  = [NaN, NaN, NaN, -90, 0, NaN];
+cfg.refCondition   = {'', '', 'balanced', 'baseline|balanced', 'baseline|balanced', ''};
 cfg.addedRadius_mm = 65;    % radius of the bolt holes from the spin axis [mm] (flywheel_test.pdf)
+
+% --- Imbalance angle without a tach (from the start of every ramp) ---
+cfg.phaseRPM    = 200:50:450;  % [rpm] window centres in the ramp (low speed = little amplification)
+cfg.phaseWinSec = 1;           % [s] window length
+cfg.phaseFnHz   = NaN;         % [Hz] lateral mode from the tap test: if set, each window is corrected
+                               % for resonance amplification (x(1-(f/fn)^2)); NaN = no correction
 
 % --- Output ---
 cfg.plotDecim        = 50;    % plot every Nth sample in time-domain figures
@@ -143,6 +168,7 @@ if ~isempty(unsetGeo)
 end
 
 runs = {};
+nMissing = 0;
 for c = 1:numel(cfg.conditions)
     for k = 1:numel(cfg.speedsRPM)
         for q = cfg.tests
@@ -157,7 +183,7 @@ for c = 1:numel(cfg.conditions)
                                      'rpm', cfg.speedsRPM(k), 'test', q, ...
                                      'kind', 'step', 'accel', cfg.accelRPMperS); %#ok<SAGROW>
             else
-                fprintf('Not found, skipped: %s\n', fn);
+                nMissing = nMissing + 1;                  % not every speed/condition is run
             end
         end
     end
@@ -179,7 +205,8 @@ for c = 1:numel(cfg.conditions)
 end
 if isempty(runs), error('No run files found in %s', cfg.dataFolder); end
 nSw = sum(cellfun(@(r) strcmp(r.kind, 'sweep'), runs));
-fprintf('%d run file(s) found (%d step, %d sweep).\n', numel(runs), numel(runs) - nSw, nSw);
+fprintf('%d run file(s) found (%d step, %d sweep); %d other speed/condition/trial combinations have no file.\n', ...
+    numel(runs), numel(runs) - nSw, nSw, nMissing);
 
 %% ===================== ANALYSE EVERY RUN =====================
 
@@ -191,14 +218,16 @@ end
 %% ===================== SUMMARY TABLE =====================
 
 nR = numel(results);
-T = table('Size', [nR 17], ...
-    'VariableTypes', [{'string','string','string'}, repmat({'double'}, 1, 14)], ...
+T = table('Size', [nR 21], ...
+    'VariableTypes', [{'string','string','string'}, repmat({'double'}, 1, 14), {'string'}, repmat({'double'}, 1, 3)], ...
     'VariableNames', {'Run','Condition','Kind','RPM','Test','tStart_s','fSpin_Hz', ...
-                      'Fx_N','Fy_N','Fz_N','Mx_Nm','My_Nm','Mz_Nm','Fe_N','U_gmm','MzRampMean_Nm','tStop_s'});
+                      'Fx_N','Fy_N','Fz_N','Mx_Nm','My_Nm','Mz_Nm','Fe_N','U_gmm','MzRampMean_Nm','tStop_s', ...
+                      'SpinDir','Angle0_deg','ULow_gmm','tStartErr_s'});
 for r = 1:nR
     s = results{r};
     T(r, :) = {string(s.id), string(s.cond), string(s.kind), s.rpm, s.test, s.tStart, s.fSpin, ...
-               s.A6(1), s.A6(2), s.A6(3), s.A6(4), s.A6(5), s.A6(6), s.Fe, s.Uc_gmm, s.MzRampMean, s.tStop};
+               s.A6(1), s.A6(2), s.A6(3), s.A6(4), s.A6(5), s.A6(6), s.Fe, s.Uc_gmm, s.MzRampMean, s.tStop, ...
+               string(s.dir), s.angle0, s.uLow, s.tErr};
 end
 fprintf('\n================ SUMMARY (1x amplitudes at the spin frequency) ================\n');
 disp(T);
@@ -206,6 +235,35 @@ writetable(T, fullfile(cfg.outputFolder, 'summary.csv'));
 fprintf('Summary saved to %s\n', fullfile(cfg.outputFolder, 'summary.csv'));
 for c = find(~isnan(cfg.addedMass_g))
     fprintf('Expected added imbalance, %s: %.2f g.mm\n', cfg.conditions{c}, cfg.addedMass_g(c) * cfg.addedRadius_mm);
+end
+
+%% ===================== ADDED IMBALANCE AS A VECTOR (residual subtracted) =====================
+% Each run gives a low-speed imbalance vector U*exp(i*angle) from its ramp (200-450 rpm, where
+% the resonance amplification is only a few %). Subtracting the mean vector of the reference
+% condition removes the wheel's own residual imbalance. Only meaningful if every run started
+% from the same wheel position.
+
+fprintf('\n================ ADDED IMBALANCE: VECTOR MINUS THE WHEEL''S OWN RESIDUAL ================\n');
+uvec = @(s) s.uLow * exp(1i * deg2rad(s.angle0));
+for c = find(~isnan(cfg.addedMass_g))
+    sel = find(cellfun(@(s) strcmp(s.cond, cfg.conditions{c}) && isfinite(s.angle0), results));
+    if isempty(sel), continue; end
+    Vc = mean(cellfun(uvec, results(sel)));
+    Vr = NaN; refName = '';
+    for ref = strsplit(cfg.refCondition{c}, '|')
+        if isempty(ref{1}), continue; end
+        sr = find(cellfun(@(s) strcmp(s.cond, ref{1}) && isfinite(s.angle0), results));
+        if ~isempty(sr), Vr = mean(cellfun(uvec, results(sr))); refName = sprintf('%s (n = %d)', ref{1}, numel(sr)); break; end
+    end
+    fprintf('%-20s measured %6.1f g.mm at %6.1f deg (n = %d)', cfg.conditions{c}, abs(Vc), rad2deg(angle(Vc)), numel(sel));
+    if isfinite(Vr)
+        Va = Vc - Vr;
+        fprintf('\n%-20s minus %s: %.1f g.mm at %.1f deg\n%-20s = ADDED %.1f g.mm at %.1f deg', '', refName, ...
+                abs(Vr), rad2deg(angle(Vr)), '', abs(Va), rad2deg(angle(Va)));
+    end
+    fprintf('   | expected %.1f g.mm', cfg.addedMass_g(c) * cfg.addedRadius_mm);
+    if ~isnan(cfg.addedAngleDeg(c)), fprintf(' at %.0f deg', cfg.addedAngleDeg(c)); end
+    fprintf('\n');
 end
 
 %% ===================== COMBINED CAMPBELL PLOTS (one per condition) =====================
@@ -430,6 +488,12 @@ function res = analyseRun(run, cfg, W)
     res.id = run.id; res.cond = run.cond; res.rpm = run.rpm; res.test = run.test; res.kind = run.kind;
     res.tStart = tStart; res.tStop = tStop; res.fSpin = fSpin; res.A6 = A6; res.Fe = Fe;
     res.Ux_gmm = Ax / om^2 * 1e6; res.Uy_gmm = Ay / om^2 * 1e6; res.Uc_gmm = Fe / om^2 * 1e6;
+
+    % ---- imbalance angle at the start (no tach: needs the same start position every run) ----
+    [res.angle0, res.uLow, res.dir, res.tErr] = startAngle(F6(:, 1) + 1i * F6(:, 2), Fs, tStart, ...
+        run.accel, cfg.phaseRPM(cfg.phaseRPM <= run.rpm - 50), cfg.phaseWinSec, cfg.phaseFnHz);
+    fprintf('Imbalance at start: %.1f g.mm at %.1f deg (spin %s, start-time error %+.3f s)\n', ...
+        res.uLow, res.angle0, res.dir, res.tErr);
     fprintf('Spin frequency: commanded %.3f Hz, measured %.3f Hz (%.1f rpm)\n', f0, fSpin, fSpin * 60);
     if abs(fSpin - f0) / f0 > 0.03
         warning('%s: measured spin frequency differs from commanded by more than 3%%.', run.id);
@@ -711,6 +775,40 @@ function fig = plotCampbell(f, rpmGrid, Pm, ttl, cfg, fMax)
         xlabel('Speed (rpm)'); ylabel('Frequency (Hz)'); title(names{j});
     end
     sgtitle([ttl ' (dashed: spin orders ' num2str(cfg.orders) ')'], 'Interpreter', 'none');
+end
+
+function [ang0, uLow, dirStr, tErr] = startAngle(z, Fs, t0, accel, rpmQ, winSec, fn)
+    % Angle [deg, top view, 0 = +X] and size [g mm] of the rotating 1x force at the motor start.
+    % The stepper is open-loop, so during the ramp the wheel has turned theta = pi*(accel/60)*(t-t0)^2
+    % from its start position. Each window's phasor of z = Fx + i*Fy is demodulated against theta
+    % (both spin directions are tried; the stronger one is the real direction). An error dt in the
+    % start time adds omega*dt to the phase, i.e. a term proportional to rpm, so phase vs rpm is
+    % fitted with a line and the 0 rpm intercept is kept.
+    ang0 = NaN; uLow = NaN; dirStr = ""; tErr = NaN;
+    if numel(rpmQ) < 2, return; end
+    t = (0:numel(z) - 1)' / Fs;
+    Zc = complex(nan(2, numel(rpmQ)), nan(2, numel(rpmQ)));
+    for k = 1:numel(rpmQ)
+        tc = t0 + rpmQ(k) / accel;
+        idx = t >= tc - winSec / 2 & t < tc + winSec / 2;
+        if nnz(idx) < 0.9 * winSec * Fs, continue; end
+        th = pi * (accel / 60) * (t(idx) - t0).^2;
+        w = hann(nnz(idx));
+        zz = z(idx) - mean(z(idx));
+        Zc(1, k) = sum(w .* zz .* exp(-1i * th)) / sum(w);   % counter-clockwise (top view)
+        Zc(2, k) = sum(w .* zz .* exp(+1i * th)) / sum(w);   % clockwise
+    end
+    ok = all(isfinite(Zc), 1);
+    if nnz(ok) < 2, return; end
+    [~, d] = max(sum(abs(Zc(:, ok)), 2));
+    dirStr = "CCW"; if d == 2, dirStr = "CW"; end
+    Z = Zc(d, ok); r = rpmQ(ok);
+    p = polyfit(r, unwrap(angle(Z)), 1);
+    ang0 = rad2deg(angle(exp(1i * p(2))));
+    tErr = p(1) / (2 * pi / 60);
+    amp = 1;
+    if isfinite(fn), amp = 1 ./ (1 - (r / 60 / fn).^2); end   % resonance amplification
+    uLow = mean(abs(Z) ./ amp ./ (2 * pi * r / 60).^2) * 1e6;
 end
 
 function [U0, fn, ok] = fitResonance(f, U, fMin)

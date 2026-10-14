@@ -242,11 +242,27 @@ top bolt head at r = 65 mm, so expected **96.2 g·mm**. Every run started with t
   the rig.
 - **Applied** as `cfg.sensorScale = [1 1 1.11 1 1 1]` in `analyze_rwa_campbell.m`. Both test folders
   were re-analysed; Fx/Fy is now 0.97–1.03 for the imbalance runs at 300–600 rpm.
+- **Independent check** (found by the report chat, 14 Oct): with the correction, the x and y
+  moment/force heights (Mx/Fy, My/Fx) agree within 1 mm, at 0.218–0.236 m against ~0.23 m expected
+  for the added mass at the wheel's top face. Without the correction they differed by several
+  percent.
 - **Effect:** U rises by about 5%. Bolt (11 Oct, PLA): **U₀ = 650 g·mm vs 621 expected (+4.6%)**,
   fₙ = 23.9 Hz (uncorrected 613, −1.3%). Known 1.48 g mass (13 Oct, steel): **U₀ = 108.5 vs 96.2
   (+13%)**, fₙ = 39.0 Hz (uncorrected 103.2, +7%). The bolt result is the cleaner calibration check
   because its residual is only ~3% of the bolt. It suggests absolute accuracy of about ±5%, set by
   the Rx calibration and the residual imbalance.
+
+## Sensor sign conventions (14 Oct)
+
+The axial TAS510 gauges read positive in tension. The radial PCB 208C piezos read positive in
+**compression** (PCB convention, confirmed in FlexLogger 14 Oct). The script keeps
+`cfg.sensorSign = +1` for all six, because the **net** signs of the mapping (sensor sign × stinger
+direction × force-on-platform convention) are validated empirically:
+1. The moment/force heights (0.22–0.25 m) match the added mass at the wheel top face (~0.23 m). A
+   radial-vs-axial flip would give ~0.04 m.
+2. The imbalance angle (−80°) matches a mass placed at −90°. An overall radial flip would give ~+90°.
+
+Don't change the signs unless sensors or stingers are re-mounted, and then repeat both checks.
 
 ## Finding 6: the imbalance angle is recoverable without a tach (14 Oct)
 
@@ -260,9 +276,13 @@ top bolt head at r = 65 mm, so expected **96.2 g·mm**. Every run started with t
   0.002–0.045 s.
 - **Result (12 runs, 300–1500 rpm steps plus 2 sweeps): imbalance angle at start = −79.6° ± 9.7°
   (circular std), against −90° expected.** The ~10° offset is consistent with the residual
-  imbalance (up to ±11° for 18 g·mm against 96 g·mm) and with the mass sitting on a bolt-ring hole
-  rather than exactly at 6 o'clock (the ring holes nearest 6 o'clock are at ±15°).
-- Script: `daq_analysis/phase_check.m` (snapshot of the scratch analysis). Note for future work:
+  imbalance (up to ±11° for 18 g·mm against 96 g·mm; e.g. a residual of 20 g·mm at +30° gives
+  exactly −79° in a synthetic test) and with aligning the start position by eye.
+- Script: `daq_analysis/phase_check.m` (snapshot of the scratch analysis). Since 14 Oct this is
+  built into `analyze_rwa_campbell.m`: every run reports its start angle, and each added-mass
+  condition has the reference (baseline) vector subtracted. Verified on synthetic data: the added
+  mass was recovered at 96.3 g·mm, −90.0° and 96.2 g·mm, −0.1° (true 96.2 g·mm at −90° and 0°), with
+  `cfg.phaseFnHz` set to the true fₙ. Note for future work:
   a once-per-rev tach would give the phase directly and allow vector subtraction of the residual
   imbalance.
 

@@ -23,3 +23,20 @@
     poster point.
   - `P4P Shared/PCB FT/INDEX.md` wrongly says the 208C02 is on the axial stingers (it's Ry1, radial).
     Left unchanged; it's outside the repo.
+- **Later, prep for the 15 Oct test session (new aluminium mounting plate, ~575 g vs 192.6 g PLA):**
+  - Advised keeping the 8 top + 8 bottom bolt ring unchanged: the plate already adds ~380 g, so the
+    supported mass goes to ~1375 g, and on mass alone fₙ would drop 39 → ~33 Hz unless the plate
+    adds stiffness. Change one variable at a time. Geometry is unchanged per the user.
+  - Session plan: tap tests first to set a safe top speed (1800 rpm = 30 Hz may be too close to
+    fₙ); baseline, then washer at 6 o'clock, then washer at 3 o'clock (90° check), then baseline
+    again, all from the same start mark.
+  - `analyze_rwa_campbell.m`: `cfg.testFolder = '15_10_26_tests'`; conditions balanced/baseline/
+    imbalanced_1A/1W/1W_90deg/baseline_end with per-condition added mass, angle and reference
+    condition; 1800 rpm steps and sweeps; built-in start angle (`startAngle`), with new summary
+    columns SpinDir/Angle0_deg/ULow_gmm/tStartErr_s; vector subtraction of the residual; optional
+    resonance correction `cfg.phaseFnHz`; missing-file messages collapsed to a count.
+  - Synthetic test: the washer was recovered at 96.3 g·mm, −90.0° and 96.2 g·mm, −0.1° (true 96.2
+    at −90/0), and the residual at 20.0 g·mm, 30.4° (true 20, 30°).
+  - Tap script pointed at `15_10_26_tests`; created the empty folder. Snapshots refreshed in
+    `daq_analysis/`.
+- **Sign note:** the user saw that the PCB radial piezos read positive in compression (the axial gauges read positive in tension). I kept `sensorSign = +1`, because the net signs are validated by the moment-height and start-angle checks. Documented this in the script comment and the knowledge note.
