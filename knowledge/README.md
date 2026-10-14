@@ -29,6 +29,9 @@ Source documents:
 10. [09_references.md](09_references.md) — full reference list
 11. [10_experimental_results.md](10_experimental_results.md) — first spin tests (2026-10-11):
     bolt imbalance validated, ~24 Hz resonance, open items
+12. [11_commercial_system_cost.md](11_commercial_system_cost.md) — what a commercial (Kistler-based)
+    RWA microvibration system costs: ≈NZ$130k–300k+ for a lab setup, €200–500k for an agency
+    facility, with IEEE references for the poster/report
 
 Notes use `[[name]]`-style cross-links between related sections (readable as plain markdown; not
 wiki-link-rendering software).

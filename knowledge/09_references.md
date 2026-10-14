@@ -28,3 +28,17 @@ Part of [[00_project_overview]]. Cited across [[01_literature_review_microvibrat
 - Zhang, Z., Aglietti, G.S., Ren, W. and Addari, D. (2014). *Microvibration analysis of a cantilever
   configured reaction wheel assembly.* Advances in Aircraft and Spacecraft Science, 1(4),
   pp. 379–398.
+
+## Commercial system cost (see [[11_commercial_system_cost]])
+
+- De Munter, W., Delabie, T. and Vandepitte, D. (2018). *Characterization of reaction wheel
+  micro-vibrations.* Proceedings of ISMA2018 and USD2018, Leuven, pp. 3511–3526.
+- European Space Agency (2016). *Micro-vibration measurement and excitation platform for big
+  specimen.* Open Invitation to Tender AO8840, ref. 16.126.01, ESTEC (price range 200–500 kEUR).
+- Kistler Group (2025). *Microvibration Dynamometer Type 9236A1, 9236A2.* Datasheet
+  9236A_003-460e-07.25.
+- Totis, G., Bordon, A., Scalzo, F. and Sortino, M. (2025). *Bridging cost and performance in
+  cutting force measurement: a PVDF-based universal plate dynamometer.* Sensors, 25(21), 6645.
+  doi:10.3390/s25216645.
+- Thorlabs (catalogue) active isolation supports; National Instruments online store (cDAQ-9178,
+  NI 9234). Full IEEE entries in [[11_commercial_system_cost]].

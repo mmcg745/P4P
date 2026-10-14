@@ -9,3 +9,8 @@
   - the encoder Next Step now builds on that result.
   Re-exported the HTML, PDF and preview and republished the canvas.
 - **Notes:** the bolt result (U₀ 650 vs 621, +4.6%, the cleanest calibration check, ~±5% accuracy) comes from 11 Oct PLA-bracket data. It was not added, because the user asked to keep the poster to 12_10 data. The baseline residual varying between sessions (≈40, 5, 18 g·mm) was not added either. Ask the user whether to include either.
+
+## Later: review of new photos and aluminium-plate results
+
+- **Asked:** look at the user's updates and the new photos in `RWA_testing_rig_photos`. More testing with the new plate is tomorrow, after which the poster may get new graphs and photos.
+- **Did:** reviewed commit 27e785a (Finding 7: Al plate taps; lowest modes 39.5–40.0 / 48.5–48.7 Hz, only +2–3% despite +38% mass, so the RWA frame is the soft part; 325 Hz stepper hum with the motor energised). Converted the 14 new HEIC photos (scratchpad `photos2/`) and rewrote `RWA_testing_rig_photos/INDEX.md` with descriptions and poster picks. The poster itself is unchanged and waits for the 15 Oct spin results.
