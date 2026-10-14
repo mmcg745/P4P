@@ -146,7 +146,8 @@ cfg.addedRadius_mm = 65;    % radius of the bolt holes from the spin axis [mm] (
 % --- Imbalance angle without a tach (from the start of every ramp) ---
 cfg.phaseRPM    = 200:50:450;  % [rpm] window centres in the ramp (low speed = little amplification)
 cfg.phaseWinSec = 1;           % [s] window length
-cfg.phaseFnHz   = NaN;         % [Hz] lateral mode from the tap test: if set, each window is corrected
+cfg.phaseFnHz   = 44;          % 15 Oct taps (Al plate): x 39.8 Hz, y 48.6 Hz -> 44 Hz effective for |Fx+iFy|
+                               % [Hz] lateral mode from the tap test: if set, each window is corrected
                                % for resonance amplification (x(1-(f/fn)^2)); NaN = no correction
 
 % --- Output ---

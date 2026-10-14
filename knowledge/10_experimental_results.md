@@ -286,6 +286,38 @@ Don't change the signs unless sensors or stingers are re-mounted, and then repea
   a once-per-rev tach would give the phase directly and allow vector subtraction of the residual
   imbalance.
 
+## Finding 7: the aluminium mounting plate barely moves the lowest modes (15 Oct taps)
+
+New aluminium mounting plate, ~575 g (PLA plate 192.6 g), so the supported mass is ~1375 g; the
+bolt ring is unchanged. Tap tests: 3 files per direction (X, Y, Z, TOP), radial peaks 0.3–2.8 N.
+
+| Mode | PLA plate, steel brackets (12 Oct) | Al plate (15 Oct) | Shows in |
+|---|---|---|---|
+| Lowest X sway | 38.8 Hz | **39.5–40.0 Hz** | Fx, My, Mz |
+| Lowest Y sway | 47.9 Hz | **48.5–48.7 Hz** | Fy, Mx |
+| Twist | 41.4 Hz | 40.0–40.6 Hz (couples with X) | Mz |
+| Rocking | 63–64 Hz | 62–63 Hz | Mx/My/Fz |
+| Fy/Mx mode | ~91 Hz | ~84 Hz | Fy, Mx |
+| Axial | ~128 Hz | **122.7 and 154.1 Hz** | Fz |
+| Higher X | 166–171, 228, 292 Hz | 263.5, 317.5, 427.3 Hz | Fx, My, Mz |
+
+- **The lowest modes rose only 2–3% even though the supported mass rose ~38%.** If those modes were
+  the whole platform swaying on its supports, the extra mass alone would have dropped them ~15%
+  (39 → ~33 Hz). Either the plate added stiffness that exactly offsets the mass, or, more likely,
+  the 40/49 Hz modes are dominated by the **RWA's own frame** (threaded rods holding the top plate
+  and wheel) swaying relative to the mounting plate. TAP_TOP again excites mainly 39.8/48.5 Hz.
+  The next stiffening target is the RWA frame, not the mounting plate.
+- **Noise:** with the motor off, the noise at the spin frequency is unchanged (0.03–0.2 g·mm
+  equivalent). **With the motor energised (1/2 step, holding), the Rx sensors show ~0.115 N RMS,
+  mostly a 325 Hz line** (12 Oct at 1/8 step: ~0.004 N). That's stepper/driver hum transmitted
+  through the plate. It doesn't affect 1× results (1× noise is still 0.01–0.1 g·mm) but will show
+  as a 325 Hz line in PSDs and Campbell plots. Mains 50/150/350 Hz is still on Fz.
+- **Safe top speed:** 1800 rpm = 30 Hz → amplification ~2.3× in x and ~1.6× in y. With the 1.48 g
+  mass plus residual (~115 g·mm), that's ~9.5 N on the Rx pair (~4.7 N each) and ~6.6 N on Ry1,
+  below the ~12 N Ry1 survived in the 13 Oct ~1900 rpm run. **1800 rpm is OK** for baseline and
+  washer, steps and sweeps.
+- `cfg.phaseFnHz = 44` (effective x/y: 39.8/48.6 Hz) for the low-speed angle and vector analysis.
+
 ## Why the measured imbalance rises with speed (poster-ready explanation)
 
 Terminology used on the poster: **"baseline wheel"** = the `balanced` condition (3D-printed
