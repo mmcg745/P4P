@@ -46,22 +46,38 @@ MMCF also use Kistler sensors [4].
 | **Total (university lab level)** | | **≈NZ$130k–300k+** |
 | Agency facility (reference point) | ESA ITT AO8840 (2016): versatile 6-DoF micro-vibration measurement/excitation stage, price range **€200–500k** [8] | ≈NZ$0.4–1.0M |
 
-Comparison: this project's rig uses the following equipment (from a 14 Oct equipment handoff and
-[[10_experimental_results]]). *Rig cost still to be totalled; ask the user / Brodie.*
+## This rig's parts list (user, 15 Oct 2026)
 
-- **DAQ chassis:** NI cDAQ-9174 (4-slot, USB). The modules share the backplane clock, so the
-  axial and radial channels are hardware-synchronised. Slots 3–4 are free; a tach/counter module
-  such as an NI 9401/9411 is planned but not yet bought.
-- **Radial channels:** NI 9232 (3-ch IEPE, 24-bit, AC-coupled, 4 mA excitation) with PCB 208C01,
-  208C01 and 208C02 ICP force sensors (Rx1, Rx2, Ry1).
-- **Axial channels:** NI 9237 (4-ch bridge, 10 V internal excitation) through 3 × NI 9949 RJ50 to
-  screw-terminal adapters, with 3 × TAS510 10 kg strain-gauge load cells (2.0 ± 0.5 mV/V, combined
-  error ±0.3% FS).
-- **Software:** NI FlexLogger (TDMS logging with CSV export, 10 kHz), with analysis in MATLAB
-  (`analyze_rwa_campbell.m`).
-- **Mechanics:** 3D-printed and aluminium mounting plates, steel wire stingers, galvanised steel
-  radial brackets, a Prusa NEMA17 stepper with Tic T500 driver, and a 3D-printed test wheel with
-  bolt masses.
+The rig's cost can't be cleanly defined. It was built mostly from equipment already available in
+the university lab, so there is no single purchase price to quote. Parts list:
+
+| Function | Part | Qty |
+|---|---|---|
+| Radial force sensors (Rx1, Rx2) | PCB 208C01 ICP force sensor | 2 |
+| Radial force sensor (Ry1) | PCB 208C02 ICP force sensor | 1 |
+| Axial load cells (Az1–Az3) | TAS510 10 kg strain-gauge load cell (technician-calibrated) | 3 |
+| DAQ chassis | NI cDAQ-9174 (4-slot USB, shared backplane clock) | 1 |
+| Radial DAQ module | NI 9232 (3-ch IEPE, 24-bit, AC-coupled) | 1 |
+| Axial DAQ module | NI 9237 (4-ch bridge, 10 V excitation), via NI 9949 RJ50 adapters | 1 |
+| Vibration isolation | Isolation table (lab equipment) | 1 |
+| Radial brackets | Off-the-shelf B68 L-brackets from Bunnings, cut down and drilled in-house | 3 |
+| Mounting plate | CNC-machined aluminium plate | 1 |
+| Radial stingers | 0.8 mm dia × 100 mm piano wire (95 mm free length)² | 3 |
+| Axial stingers | 1.2 mm dia × 100 mm piano wire (95 mm free length)² | 3 |
+| Fasteners | Various nuts and bolts | — |
+
+Also used: NI FlexLogger (logging at 10 kHz, TDMS and CSV) and MATLAB analysis
+(`analyze_rwa_campbell.m`). The test article is a Prusa NEMA17 stepper with a Tic T500 driver and
+a 3D-printed test wheel with bolt masses. That is the "RWA" under test, not part of the
+measurement device.
+
+² Each wire is cut to 100 mm. Its 2.5 mm ends sit inside the bolts they are welded into, so
+the free (effective) length is 95 mm, which is the value used in [[10_experimental_results]]
+(confirmed by the user, 15 Oct).
+
+The sensors (2 × 208C01, 1 × 208C02, 3 × TAS510) and the bracket and stinger hardware are the
+parts specific to this design. The DAQ, isolation table and software would be needed by a
+commercial dynamometer as well.
 
 The rig is also mounted on a **vibration isolation table** (confirmed 15 Oct), just as the
 KU Leuven setup uses an air table [1]. Isolation and DAQ are therefore common to both approaches.
