@@ -32,6 +32,8 @@ Source documents:
 12. [11_commercial_system_cost.md](11_commercial_system_cost.md) — what a commercial (Kistler-based)
     RWA microvibration system costs: ≈NZ$130k–300k+ for a lab setup, €200–500k for an agency
     facility, with IEEE references for the poster/report
+13. [final_report_intent.md](final_report_intent.md) — final report: author intent, narrative arc,
+    settled decisions, open items and working routine. Read first before any report edit
 
 Notes use `[[name]]`-style cross-links between related sections (readable as plain markdown; not
 wiki-link-rendering software).
