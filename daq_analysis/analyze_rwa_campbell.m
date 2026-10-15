@@ -156,6 +156,10 @@ cfg.plotDecim        = 50;    % plot every Nth sample in time-domain figures
 cfg.savePlots        = true;  % PNGs into cfg.outputFolder
 cfg.closeRunFigures  = true;  % close per-run figures after saving
 cfg.perRunCampbell   = false; % also draw a Campbell plot for every single run
+% Combined Campbell plots: only these conditions and run types are drawn (0-fMax and 0-fMaxLow).
+% The slow sweeps give the cleanest maps; the step ramps only repeat them at lower speed.
+cfg.campbellConditions = {'baseline', 'balanced', 'imbalanced_1W'};   % {} = every condition
+cfg.campbellKinds      = {'sweep'};                                    % 'step' and/or 'sweep'
 
 %% ===================== BUILD RUN LIST =====================
 
@@ -266,7 +270,9 @@ end
 
 kinds = {'step', 'sweep'};
 for c = 1:numel(cfg.conditions)
+    if ~isempty(cfg.campbellConditions) && ~any(strcmp(cfg.conditions{c}, cfg.campbellConditions)), continue; end
     for kd = 1:2
+        if ~any(strcmp(kinds{kd}, cfg.campbellKinds)), continue; end
         sel = find(cellfun(@(s) strcmp(s.cond, cfg.conditions{c}) && strcmp(s.kind, kinds{kd}), results));
         if isempty(sel), continue; end
         sfx = cfg.conditions{c};
@@ -775,6 +781,15 @@ function fig = plotCampbell(f, rpmGrid, Pm, ttl, cfg, fMax)
     % Smet-style Campbell: PSD (log colour) vs speed (x) and frequency (y).
     fig = figure('Name', ttl, 'Position', [60 60 1400 800]);
     tiledlayout(2, 3, 'TileSpacing', 'compact');
+    % Crop the speed axis to the bins that hold data (any component), so there is no blank
+    % strip where the grid runs past the top speed of these ramps.
+    has = find(any(any(isfinite(Pm), 1), 3));
+    if ~isempty(has)
+        cols = has(1):has(end);
+        rpmGrid = rpmGrid(cols); Pm = Pm(:, cols, :);
+    end
+    dr = (rpmGrid(end) - rpmGrid(1)) / max(numel(rpmGrid) - 1, 1);   % bin width
+    xl = [rpmGrid(1) - dr / 2, rpmGrid(end) + dr / 2];                 % image edges
     names = {'Fx', 'Fy', 'Fz', 'Mx', 'My', 'Mz'};
     units = {'N^2/Hz', 'N^2/Hz', 'N^2/Hz', 'N^2m^2/Hz', 'N^2m^2/Hz', 'N^2m^2/Hz'};
     for j = 1:6
@@ -794,7 +809,7 @@ function fig = plotCampbell(f, rpmGrid, Pm, ttl, cfg, fMax)
         for ord = cfg.orders
             plot(rpmGrid, ord * rpmGrid / 60, 'k--', 'LineWidth', 0.8);
         end
-        ylim([0 fMax]); xlim([min(rpmGrid) max(rpmGrid)]);
+        ylim([0 fMax]); xlim(xl);
         xlabel('Speed (rpm)'); ylabel('Frequency (Hz)'); title(names{j});
     end
     sgtitle([ttl ' (dashed: spin orders ' num2str(cfg.orders) ')'], 'Interpreter', 'none');

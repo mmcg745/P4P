@@ -20,6 +20,7 @@ Refresh these snapshots whenever the working copies change.
 - **Sampling and ramps:** `cfg.Fs = 10000`. `cfg.accelRPMperS = 37.5` (Tic accel 100000 at 1/8 step, 25000 at 1/2 step). `cfg.sweepAccelRPMperS = 15`.
 - **Geometry:** R = 50 mm, Rx spacing 105 mm (centred), zr = 140 mm above the base plate, xRy = 0.
 - **Sensor scaling:** `cfg.sensorScale(3) = 1.11`. Ry1 (208C02) reads about 11% low against the technician-calibrated Rx 208C01s. See `knowledge/10_experimental_results.md`.
+- **Campbell plots:** `cfg.campbellConditions` and `cfg.campbellKinds` choose which combined Campbells are drawn (default: baseline and 1W sweeps). The speed axis is cropped to the range with data.
 - **Overrides:** per-run values in `cfg.override.<runId>` for `tStart`, `window` or `accel`.
 
 Results and interpretation: [knowledge/10_experimental_results.md](../knowledge/10_experimental_results.md).
