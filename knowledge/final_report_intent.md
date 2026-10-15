@@ -97,10 +97,16 @@ The skill is installed at `.claude/skills/stem-research-writing/` (imported from
 
 ## 5. Open items (as of 15 Oct, evening)
 
-1. **Page count:** the body runs to page 35, about 5 pages over. Claude proposed cutting about 2,000 words: design ~800, literature review ~350, discussion ~300, conclusions and future work ~300, method and introduction ~100 each.
-   - **Waiting on Matthew:** make the cuts now, or after his review notes? Is any section off-limits?
+1. **Page count: done (15 Oct, late evening).** The body now ends exactly on page 30, with no spare lines, so any addition will push it over. Body prose went from ~14,460 to ~12,590 words (texcount, text only; results unchanged). Matthew chose to make the cuts now.
+   - Prose cuts by section: design −490, discussion −480, literature review −380, future work −170, method −140, introduction −120, conclusions −85.
+   - Headings: the subsubsections of lit review §2.1, §2.2 and §2.5 were removed, and the three concept rounds became run-in paragraphs ("In the first round…"). "Predicted sensitivity" was folded into the static-imbalance subsection.
+   - Moved to Appendix A: the final-geometry FEA figure and the platform natural-frequency table (with the mode 6 `\checkme`).
+   - Layout: the Campbell figure is no longer stranded on its own float page (`[!htb]`). Several figures are a little smaller. Tables 1 and 2 have ragged-right columns.
+   - One claim fix: the Introduction's scope no longer lists the imbalance phase as unvalidated, because campaign C validated the angle.
+   - Section pages: Introduction 1–3, Literature review 3–7, Design 8–13, Method 14–17, Results 18–24, Discussion 25–29, Conclusions 29–30, Future work 30.
+   - **Waiting on Matthew:** review the cuts. Replacing the campaign A/B figures with campaign C ones (see §3, "Final data") will change the layout, so recheck the page count after that.
 2. **Contribution split with Brodie:** `\checkme` in the Introduction. Confirm with Brodie and the supervisor. Also check whether Brodie's report reuses any of these figures, which affects caption citations.
-3. **Mode 6 shape** (324.7 Hz, assumed to be vertical bounce): `\checkme` in the design chapter.
+3. **Mode 6 shape** (324.7 Hz, assumed to be vertical bounce): `\checkme` in the natural-frequency table, now in Appendix A.
 4. **Title page:** report number format and specialisation.
 5. **Appendix:** the list of research compendium contents.
 6. **Declaration:** replace `Declaration.pdf` with the signed 2026 version.
