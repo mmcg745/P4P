@@ -1,0 +1,23 @@
+# 2026-10-15 — Report figures swapped to campaign C (aluminium plate)
+
+- **Asked (via the report setup session, Matthew's words):** "replace every remaining plot from the 11-13 Oct tests with a 15 Oct aluminium-plate equivalent, and keep A/B only as the development history". Keep the body at 30 pages or fewer.
+- **Did:** (report folder on OneDrive, not in git)
+  - **fig_psd, fig_campbell:** the poster session's report-style campaign C versions (scratchpad `figs4/make_figs4.py`, made from `15_10_26_tests` with the same wrench mapping and the Ry1 ×1.11 correction). These are the same 1W sweeps as the regenerated MATLAB Campbell PNGs.
+  - **tap_comparison:** `15_10_26_tests/tap_output/tap_comparison.png`.
+  - **fig_mz and fig_imbalance:** regenerated from campaign C `summary.csv` (steady-speed means; imbalance model with fₙ = 39.8 Hz, U₀ = 119 g·mm).
+  - **Rig photo:** now two panels, `rig_al_side.jpg` (from `AL_wRWA_side2.HEIC`, test wheel on the aluminium plate) and `rig_al_housing.jpg` (the poster's `RWA_front1` crop of the rigid housing). No dates in any label.
+  - The old A/B files moved to `Figures/superseded_campaign_AB/`.
+  - **Text updated:**
+    - natural-frequency paragraph and the table footnote (aluminium-plate modes)
+    - PSD and Campbell text and captions (bands at 265/425 Hz in Fx and Mz, 150 Hz in Fz, and a 320 Hz band that coincides with the 325 Hz stepper hum)
+    - 1× Mz (0.4–24 mN·m, lever arm 3.5–5.3 mm; baseline 0.2–5.7 mN·m)
+    - discussion lever arm (dropped the "41.4 Hz torsion explains the growth" clause, because the lever is now flat)
+    - modes "40 to 49 Hz"
+    - appendix captions
+    - abstract: "about 40 Hz"
+  - **Moment height:** kept the campaign A table as the geometry check and added the campaign C ratios (0.22–0.26 m, with x and y up to 22 mm apart).
+  - **Pages:** a discussion sentence repeating the static calibration was cut to keep the body at 30 pages. The build has no undefined references or citations.
+- **Notes:**
+  - **Open:** the washer height with the aluminium plate. A question was sent to the setup session.
+  - The natural-frequency table in Appendix A and the FEA comparison in the Discussion still use the campaign B prototype (0.99 kg). The campaign C prototype (1.35 kg, aluminium plate) would compare more directly with the final-geometry FEA, which models the aluminium plate.
+  - Updated the "Final data" note in `knowledge/final_report_intent.md` §3 and §5.

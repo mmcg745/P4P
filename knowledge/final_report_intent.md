@@ -75,7 +75,15 @@ Last updated 15 Oct 2026.
   - [said, for the poster] Use "130–300k+" because it makes this rig look much cheaper.
   - [agreed] In the report, use the cited range (Totis 2025, Kistler 9236A, ESA tender, De Munter 2018). The rig's own cost is framed as hard to state cleanly, with the saving being in the sensing chain.
   - Keep any comparison to what the sources support (see the claims guidance in the skill).
-- **Final data [said, 15 Oct 02:49]:** "the 15/10 with aluminium plate is the final data we are using for outputs". Plots and headline outputs come from campaign C (aluminium plate, `15_10_26_tests`). Campaigns A and B stay only as the development and improvement history (e.g. the comparison of stiffness and amplification across configurations), not as the main evidence. As of 15 Oct evening the report still has these A/B figures in the body: PSD, Campbell, the rig photo (steel brackets) and moment height. In the appendix: tap spectra, imbalance vs speed and 1× Mz. They are still to be replaced.
+- **Final data [said, 15 Oct 02:49]:** "the 15/10 with aluminium plate is the final data we are using for outputs". Plots and headline outputs come from campaign C (aluminium plate, `15_10_26_tests`). Campaigns A and B stay only as the development and improvement history (e.g. the comparison of stiffness and amplification across configurations), not as the main evidence. **Done 15 Oct, late evening:** every plot is now from campaign C:
+  - body: PSD, Campbell and the rig photo (now (a) the 3D-printed wheel on the aluminium plate and (b) the rigid RWA housing used for the tap tests)
+  - appendix: the tap spectra, imbalance vs speed (U₀ = 119 g·mm with fₙ = 39.8 Hz, residual included) and 1× Mz
+
+  The text changed to match: the tap modes, the Campbell bands (265/425 Hz and 150 Hz, plus a 320 Hz band that coincides with the 325 Hz stepper hum), and the 1× Mz values (lever arm 3.5–5.3 mm, previously 5.5–7.8). The abstract's lowest mode is now "about 40 Hz".
+
+  Kept from A/B as development history: the stiffness table, the amplification comparison, the campaign A and B imbalance tables, the near-resonance prediction (1900 rpm), the phase result, the Appendix C run summary and its figure, and the tap column of the natural-frequency table.
+
+  The moment-height table stays campaign A, the clean geometry check. A sentence gives the campaign C ratios (0.22–0.26 m, with x and y up to 22 mm apart), because the washer height on the aluminium plate is unconfirmed. The replaced A/B figures are in `Figures/superseded_campaign_AB/`.
 - **Presentation preferences (from the poster chats) [said]:**
   - Label figures by setup (e.g. "Al plate") or not at all. **Never by test date.**
   - The photo of the real RWA housing is preferred over the 3D-printed wheel because it looks cleaner. A rig photo with the aluminium plate can replace older photos.
@@ -105,7 +113,8 @@ The skill is installed at `.claude/skills/stem-research-writing/` (imported from
    - Layout: the Campbell figure is no longer stranded on its own float page (`[!htb]`). Several figures are a little smaller. Tables 1 and 2 have ragged-right columns.
    - One claim fix: the Introduction's scope no longer lists the imbalance phase as unvalidated, because campaign C validated the angle.
    - Section pages: Introduction 1–3, Literature review 3–7, Design 8–13, Method 14–17, Results 18–24, Discussion 25–29, Conclusions 29–30, Future work 30.
-   - **Waiting on Matthew:** review the cuts. Replacing the campaign A/B figures with campaign C ones (see §3, "Final data") will change the layout, so recheck the page count after that.
+   - **Waiting on Matthew:** review the cuts. The campaign C figure swap is done, and the body is still 30 pages.
+   - **Open:** is the washer still about 230 mm above the base plate with the aluminium plate? If so, the campaign C moment heights read about 10% high at low speed.
 2. **Contribution split with Brodie:** `\checkme` in the Introduction. Confirm with Brodie and the supervisor. Also check whether Brodie's report reuses any of these figures, which affects caption citations.
 3. **Mode 6 shape** (324.7 Hz, assumed to be vertical bounce): `\checkme` in the natural-frequency table, now in Appendix A.
 4. **Title page:** report number format and specialisation.
