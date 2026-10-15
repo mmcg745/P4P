@@ -435,6 +435,11 @@ of the case.
   stays at **45.9–46.1 Hz**, while the higher X modes move 259 → 272 Hz, 317 → 323 Hz and
   435 → 437 Hz, and a 60 Hz mode (probably rocking) appears. So the bracket joints affect the higher
   modes but not the lowest one.
+- **Mode shape check:** the case CoM is ~50 mm above the plate's top surface, so the supported CoM
+  is ~164 mm above the base plate (plate at ~140 mm, case at ~190 mm). At the 46 Hz X mode,
+  My/Fx = **0.164–0.167 m** (phase ≤ 2°) in `TAP_X4–6`, which is the CoM height. So the mode is a
+  **rigid-body sway of the whole supported mass**: not rocking or bending of the case, and not a
+  stinger mode. The compliance is below the stingers.
 - **Most likely limiting element: the clear acrylic base plate** under the Rx bracket (user's
   assessment; consistent with all of the above). Not yet isolated by a direct test (e.g. clamping
   the base plate or tapping the bracket on its own).

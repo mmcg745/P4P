@@ -79,3 +79,4 @@
   Tap script now points at `15_10_26_rigid_case`. Not committed (user asked to hold); CoM estimate
   pending.
 - Expanded Finding 11 point 3: ways to raise fₙ without losing decoupling (fix the larger compliances first, high-E stinger materials, flexure/notched stingers, scaling L and d together, lighter plate, pre-tension, end fittings, axial load-cell stiffness), following the user's point that thicker stingers worsen decoupling.
+- **Rigid-case CoM** (user estimate): ~50 mm above the plate top, so the supported CoM is ~164 mm. My/Fx at the 46 Hz X mode = 0.164–0.167 m (TAP_X4–6), so the mode is a rigid-body sway; added to Finding 11.
