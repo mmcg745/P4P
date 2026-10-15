@@ -7,7 +7,7 @@ Sections are marked by source:
 - **[agreed]**: Claude proposed it and Matthew accepted it.
 - **[draft]**: a framing that is in the current draft but hasn't been explicitly discussed; treat it as provisional.
 
-Last updated 15 Oct 2026.
+Last updated 15 Oct 2026 (FEA vs rigid-case comparison).
 
 ---
 
@@ -50,7 +50,7 @@ Last updated 15 Oct 2026.
    - **RQ3, the accuracy limit:**
      - The ~39 Hz lateral mode amplifies the imbalance force, which is why the measured imbalance rises with speed. A transmissibility model, confirmed by tap tests, corrects it to within 3% up to 1900 rpm.
      - The diagnosis: the aluminium plate isn't the limit; the wheel's frame limits y; x is whole-body sway below the stingers (likely the acrylic base).
-     - The rig is up to 87 times softer laterally than the wires alone, and the FEA (which uses bonded joints and a fixed base) is still two to four times too stiff.
+     - The rig is up to 87 times softer laterally than the wires alone. Against the rigid-case tap tests (1.08 kg), the FEA (which uses bonded joints and a fixed base) is still 10 times too stiff in x and 2.3 times in y.
 7. **Implication and future work.** Stiffen the support structure (base first, then the frame, higher-modulus or notched stingers and a lighter plate), add an encoder, and test a flight-representative wheel.
 
 **Tone [draft]:** honest engineering. The limitation is a *finding*, not a failure: the report shows what limits a low-cost platform and how to fix it. The cost claims stay cited and calibrated (see §4).
@@ -66,6 +66,7 @@ Last updated 15 Oct 2026.
   - a frame of struts and a post (confirmed)
 
   The ANSYS X and Y axes are swapped relative to the report.
+- **FEA comparison [said, 15 Oct]:** "the fea can be compared with the rigid tap tests as they have similar mass". The report compares the final-geometry FEA (~1.5 kg) with the rigid-case taps (1.078 kg; 46.3/73.1 Hz; 91/228 kN/m), not with campaign B (0.99 kg). Stiffness: FEA 940/530 kN/m, so 10× (x) and 2.3× (y) too stiff; no mass scaling. The stated reasons are bolted joints vs bonded contacts and, mainly for x, the acrylic base on the isolation table vs a fixed steel base. The frame reason was dropped because the rigid case removes the frame. Appendix A's tap column is now the rigid case (twist 43 Hz, axial 114/174 Hz, ~60 Hz probable rocking, footnoted). The Results sentence "70 to 320 times less stiff than the design-stage FEA" was cut to hold 30 pages.
 - **Stinger dimensions [said]:** the measured wire values (0.8 and 1.2 mm × 95 mm free length) are the design values throughout. The ends are welded into bolts, not grub-screw clamped.
 - **Mounting [said]:** the rig is bolted to the lab's vibration-isolation table. Its make and specification are unknown, so the report says so and lists "unknown support conditions" as a limitation.
 - **Old material [said]:** the stinger geometry and FEA sections were based on the old model, and "most of the old stuff needs updating with the recent changes". The history is kept as the design-evolution story; superseded numbers aren't.
