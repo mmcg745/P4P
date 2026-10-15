@@ -79,6 +79,30 @@ The sensors (2 × 208C01, 1 × 208C02, 3 × TAS510) and the bracket and stinger 
 parts specific to this design. The DAQ, isolation table and software would be needed by a
 commercial dynamometer as well.
 
+### Estimated replacement cost of this rig (15 Oct 2026)
+
+These are indicative purchase prices for buying the rig's parts new or used. The parts were actually
+borrowed from the lab, so this is not money spent.
+
+| Item | Price evidence | Approx. |
+|---|---|---|
+| 2 × PCB 208C01 + 1 × 208C02 ICP force sensors | PCB lists no public price ("Request a Quote") [9]. Used 208C01s sell for **US$280–360** [10]. New price assumed ≈US$1,000–1,500 each (*unverified estimate*) | US$0.9k used / ≈US$3–4.5k new |
+| 3 × TAS510 10 kg load cells | No TAS510 listing found. A similar HT Sensor TAS-series cell sells for **US$39–70** [11] | ≈US$0.1–0.2k |
+| NI cDAQ-9174 chassis | ni.com "starting at" **US$1,718** [12] | US$1.7k |
+| NI 9232 (IEPE) module | ni.com **US$1,888** [12] | US$1.9k |
+| NI 9237 (bridge) module | ni.com **US$3,076** [12] | US$3.1k |
+| Brackets, CNC Al plate, piano wire, fasteners | Hardware-store and workshop parts (*estimate*) | ≈US$0.1–0.2k |
+| Isolation table | Existing lab table; a commercial setup needs one too, so excluded | — |
+| **Total (excluding isolation table)** | | **≈US$7.8–11.5k ≈ NZ$13–20k** |
+
+- **Like-for-like sensing chain:** the six sensors cost ≈US$1–4.7k (≈NZ$2–8k). A Kistler
+  dynamometer plus charge amplifier costs €30–60k (≈NZ$60–120k) [5], so about **15–50× cheaper**.
+- **Whole system:** ≈NZ$13–20k against ≈NZ$130–300k+ for a commercial lab setup, so about
+  **7–20× cheaper**. The DAQ is the largest single item. A lower-cost DAQ would widen the gap, but
+  would cost resolution and synchronisation.
+- Poster or report wording: "built from ≈NZ$15–20k of standard lab sensors and DAQ, versus
+  NZ$100k+ for a commercial dynamometer system [5–8]."
+
 The rig is also mounted on a **vibration isolation table** (confirmed 15 Oct), just as the
 KU Leuven setup uses an air table [1]. Isolation and DAQ are therefore common to both approaches.
 The like-for-like saving is in the **sensing chain**: a calibrated 6-axis piezo dynamometer plus
@@ -138,3 +162,18 @@ Open Invitation to Tender AO8840, ref. 16.126.01, ESTEC, issued Dec. 20, 2016, p
 200–500 kEUR. Listed by the Romanian Space Agency. [Online]. Available:
 https://rosa.ro/micro-vibration-measurement-and-excitation-platform-for-big-specimen-2/
 (accessed Oct. 14, 2026).
+
+[9] PCB Piezotronics, "Model 208C01 ICP force sensor," product page (price on request).
+[Online]. Available: https://www.pcb.com/products?m=208c01 (accessed Oct. 15, 2026).
+
+[10] NextDay Automation, "Used PCB Piezotronics 208C01 ICP force sensor," listing at US$360; eBay
+listing at US$280. [Online]. Available: https://www.nextdayautomation.com/products/used-pcb-piezotronics-208c01-icp-force-sensor-500mv-lb-10lb-range-60lb-max
+(accessed Oct. 15, 2026).
+
+[11] HT Sensor Technology Co., Ltd., TAS-series (TAS513) load cell, marketplace listing
+US$38.99–69.99. Used as a proxy; no TAS510 listing was found.
+
+[12] National Instruments, online store: cDAQ-9174 (from US$1,718), NI 9232 (from US$1,888),
+NI 9237 (from US$3,076). [Online]. Available: https://www.ni.com/en/shop/hardware/compactdaq-chassis/model-cdaq-9174,
+https://www.ni.com/en/shop/hardware/sound-and-vibration/model-ni-9232,
+https://www.ni.com/en/shop/model/ni-9237.html (accessed Oct. 15, 2026).
