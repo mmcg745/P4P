@@ -21,3 +21,8 @@
   - **Open:** the washer height with the aluminium plate. A question was sent to the setup session.
   - The natural-frequency table in Appendix A and the FEA comparison in the Discussion still use the campaign B prototype (0.99 kg). The campaign C prototype (1.35 kg, aluminium plate) would compare more directly with the final-geometry FEA, which models the aluminium plate.
   - Updated the "Final data" note in `knowledge/final_report_intent.md` §3 and §5.
+
+## Later: washer height confirmed
+
+- **Asked (via the setup session, Matthew's answer):** "Yes, the washer is still about 230 mm above the base plate with the aluminium plate."
+- **Did:** rewrote the campaign C moment-height sentence against the confirmed 0.23 m: 0.25–0.26 m at 300 rpm (10–12% high), falling to 0.22–0.23 m at 1500 rpm, with x and y 5–22 mm apart. The caveats are the residual imbalance and the unequal x/y amplification, and campaign A stays as the geometry check. Updated the intent file. The body is still 30 pages, with no undefined references.

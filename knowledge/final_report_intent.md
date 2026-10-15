@@ -83,7 +83,7 @@ Last updated 15 Oct 2026.
 
   Kept from A/B as development history: the stiffness table, the amplification comparison, the campaign A and B imbalance tables, the near-resonance prediction (1900 rpm), the phase result, the Appendix C run summary and its figure, and the tap column of the natural-frequency table.
 
-  The moment-height table stays campaign A, the clean geometry check. A sentence gives the campaign C ratios (0.22–0.26 m, with x and y up to 22 mm apart), because the washer height on the aluminium plate is unconfirmed. The replaced A/B figures are in `Figures/superseded_campaign_AB/`.
+  The moment-height table stays campaign A, the clean geometry check. A sentence gives the campaign C ratios against the confirmed 0.23 m: 0.25–0.26 m at 300 rpm (10–12% high), falling to 0.22–0.23 m at 1500 rpm, with x and y 5–22 mm apart. The caveats are the residual imbalance and the unequal x/y amplification. The replaced A/B figures are in `Figures/superseded_campaign_AB/`.
 - **Presentation preferences (from the poster chats) [said]:**
   - Label figures by setup (e.g. "Al plate") or not at all. **Never by test date.**
   - The photo of the real RWA housing is preferred over the 3D-printed wheel because it looks cleaner. A rig photo with the aluminium plate can replace older photos.
@@ -114,7 +114,7 @@ The skill is installed at `.claude/skills/stem-research-writing/` (imported from
    - One claim fix: the Introduction's scope no longer lists the imbalance phase as unvalidated, because campaign C validated the angle.
    - Section pages: Introduction 1–3, Literature review 3–7, Design 8–13, Method 14–17, Results 18–24, Discussion 25–29, Conclusions 29–30, Future work 30.
    - **Waiting on Matthew:** review the cuts. The campaign C figure swap is done, and the body is still 30 pages.
-   - **Open:** is the washer still about 230 mm above the base plate with the aluminium plate? If so, the campaign C moment heights read about 10% high at low speed.
+   - **Washer height [said]:** still about 230 mm above the base plate with the aluminium plate, so the campaign C moment heights read 10–12% high at low speed. The report says so, with the caveats.
 2. **Contribution split with Brodie:** `\checkme` in the Introduction. Confirm with Brodie and the supervisor. Also check whether Brodie's report reuses any of these figures, which affects caption citations.
 3. **Mode 6 shape** (324.7 Hz, assumed to be vertical bounce): `\checkme` in the natural-frequency table, now in Appendix A.
 4. **Title page:** report number format and specialisation.
