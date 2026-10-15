@@ -20,9 +20,9 @@ clear; clc; close all;
 
 scriptDir = fileparts(mfilename('fullpath'));
 if isempty(scriptDir), scriptDir = pwd; end
-cfg.testFolder   = '15_10_26_tests';            % <<< change this for each test session
+cfg.testFolder   = '15_10_26_rigid_case';       % <<< change this for each test session
 cfg.dataFolder   = fullfile(scriptDir, cfg.testFolder);
-cfg.filePattern  = 'TAP_*.csv';
+cfg.filePattern  = 'TAP_*';                   % .mat (from convert_csv_to_mat) or .csv
 cfg.outputFolder = fullfile(cfg.dataFolder, 'tap_output');
 cfg.Fs           = 10000;                      % [Hz] FlexLogger sample rate
 
@@ -61,6 +61,10 @@ cfg.savePlots = true;
 if ~exist(cfg.outputFolder, 'dir'), mkdir(cfg.outputFolder); end
 W = buildWrenchMatrix(geo);
 files = dir(fullfile(cfg.dataFolder, cfg.filePattern));
+files = files(endsWith({files.name}, {'.csv', '.mat'}));
+[~, base] = cellfun(@fileparts, {files.name}, 'UniformOutput', false);
+isMat = endsWith({files.name}, '.mat');
+files = files(isMat | ~ismember(base, base(isMat)));     % prefer the .mat when both exist
 if isempty(files), error('No %s files found in %s', cfg.filePattern, cfg.dataFolder); end
 fprintf('%d tap file(s) found.\n', numel(files));
 
@@ -196,6 +200,15 @@ fprintf('Done. Figures are in %s\n', cfg.outputFolder);
 %% ===================== LOCAL FUNCTIONS =====================
 
 function S = loadSensors(file, cfg)
+    if endsWith(file, '.mat')
+        s = load(file, 'data', 'channels');
+        [ok, j] = ismember(cfg.sensorCols, s.channels);
+        if ~all(ok), error('Channel(s) not found in %s', file); end
+        S = double(s.data(:, j));
+        last = find(all(isfinite(S), 2), 1, 'last');
+        S = S(1:last, :) .* (cfg.sensorSign .* cfg.sensorScale);
+        return;
+    end
     opts = detectImportOptions(file, 'VariableNamingRule', 'preserve');
     missing = cfg.sensorCols(~ismember(cfg.sensorCols, opts.VariableNames));
     if ~isempty(missing)

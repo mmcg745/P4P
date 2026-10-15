@@ -46,14 +46,15 @@ cfg.speedsRPM  = [300 450 600 750 1000 1500 1800];% commanded hold speeds (missi
 %                         started with the washer at 6 o'clock (-Y)
 %   imbalanced_1W_90deg : the same washer, started at 3 o'clock (+X) - checks the angle result
 %   baseline_end        : washer removed again at the end of the session (drift check)
-cfg.conditions = {'balanced', 'baseline', 'imbalanced_1A', 'imbalanced_1W', 'imbalanced_1W_90deg', 'baseline_end'};
+%   imbalanced_2W       : two washers stacked (2 x 1.48 g) at 6 o'clock - linearity check (15 Oct)
+cfg.conditions = {'balanced', 'baseline', 'imbalanced_1A', 'imbalanced_1W', 'imbalanced_1W_90deg', 'baseline_end', 'imbalanced_2W'};
 cfg.tests      = 1:3;                        % T1..T3
 cfg.fileFmt    = 'RPM%d_%s_T%d.csv';         % rpm, condition, test number
 cfg.accelRPMperS = 37.5;                     % constant spin-up acceleration [rpm/s]
                                              % Tic accel for 37.5 rpm/s: 100000 at 1/8 step, 25000 at 1/2 step
 
 % --- Slow sweeps for Campbell plots (optional; skipped if no files) ---
-cfg.sweepSpeedsRPM    = [750 1000 1500 1800];% top speed of each sweep
+cfg.sweepSpeedsRPM    = [750 1000 1500 1600 1800];% top speed of each sweep (15 Oct: 1600 = sweeps that cut out ~1600)
 cfg.sweepTests        = 1:3;
 cfg.sweepFileFmt      = 'SWEEP%d_%s_T%d.csv';% rpm, condition, test number
 cfg.sweepAccelRPMperS = 15;                  % sweep acceleration [rpm/s] (Tic accel 10000 at 1/2 step)
@@ -138,9 +139,9 @@ cfg.fitMinRPM     = 200;    % [rpm] lower speed limit for the resonance fit of U
 % every run [deg, top view, 0 = 3 o'clock (+X), -90 = 6 o'clock (-Y); NaN = not controlled],
 % and the condition(s) holding the wheel's own residual imbalance, which is subtracted as a
 % vector (first one with data is used).
-cfg.addedMass_g    = [NaN, NaN, 9.56, 1.48, 1.48, NaN];
-cfg.addedAngleDeg  = [NaN, NaN, NaN, -90, 0, NaN];
-cfg.refCondition   = {'', '', 'balanced', 'baseline|balanced', 'baseline|balanced', ''};
+cfg.addedMass_g    = [NaN, NaN, 9.56, 1.48, 1.48, NaN, 2.96];
+cfg.addedAngleDeg  = [NaN, NaN, NaN, -90, 0, NaN, -90];
+cfg.refCondition   = {'', '', 'balanced', 'baseline|balanced', 'baseline|balanced', '', 'baseline|balanced'};
 cfg.addedRadius_mm = 65;    % radius of the bolt holes from the spin axis [mm] (flywheel_test.pdf)
 
 % --- Imbalance angle without a tach (from the start of every ramp) ---
@@ -174,13 +175,10 @@ for c = 1:numel(cfg.conditions)
     for k = 1:numel(cfg.speedsRPM)
         for q = cfg.tests
             fn = sprintf(cfg.fileFmt, cfg.speedsRPM(k), cfg.conditions{c}, q);
+            fn = findRunFile(cfg.dataFolder, fn, 'RPM');  % accepts the lab naming variants
             fp = fullfile(cfg.dataFolder, fn);
-            fnAlt = strrep(fn, 'RPM', 'RPM_');           % also accept RPM_300_... names
-            if ~isfile(fp) && isfile(fullfile(cfg.dataFolder, fnAlt))
-                fn = fnAlt; fp = fullfile(cfg.dataFolder, fn);
-            end
-            if isfile(fp)
-                runs{end+1} = struct('id', erase(fn, '.csv'), 'file', fp, 'cond', cfg.conditions{c}, ...
+            if ~isempty(fn)
+                runs{end+1} = struct('id', erase(erase(fn, '.csv'), '.mat'), 'file', fp, 'cond', cfg.conditions{c}, ...
                                      'rpm', cfg.speedsRPM(k), 'test', q, ...
                                      'kind', 'step', 'accel', cfg.accelRPMperS); %#ok<SAGROW>
             else
@@ -191,13 +189,10 @@ for c = 1:numel(cfg.conditions)
     for k = 1:numel(cfg.sweepSpeedsRPM)
         for q = cfg.sweepTests
             fn = sprintf(cfg.sweepFileFmt, cfg.sweepSpeedsRPM(k), cfg.conditions{c}, q);
+            fn = findRunFile(cfg.dataFolder, fn, 'SWEEP');
             fp = fullfile(cfg.dataFolder, fn);
-            fnAlt = strrep(fn, 'SWEEP', 'SWEEP_');       % also accept SWEEP_1500_... names
-            if ~isfile(fp) && isfile(fullfile(cfg.dataFolder, fnAlt))
-                fn = fnAlt; fp = fullfile(cfg.dataFolder, fn);
-            end
-            if isfile(fp)                         % sweeps are optional: no message if missing
-                runs{end+1} = struct('id', erase(fn, '.csv'), 'file', fp, 'cond', cfg.conditions{c}, ...
+            if ~isempty(fn)                       % sweeps are optional: no message if missing
+                runs{end+1} = struct('id', erase(erase(fn, '.csv'), '.mat'), 'file', fp, 'cond', cfg.conditions{c}, ...
                                      'rpm', cfg.sweepSpeedsRPM(k), 'test', q, ...
                                      'kind', 'sweep', 'accel', cfg.sweepAccelRPMperS); %#ok<SAGROW>
             end
@@ -370,17 +365,8 @@ function res = analyseRun(run, cfg, W)
     Fs = cfg.Fs; dec = cfg.plotDecim;
     fprintf('\n=== %s ===\n', run.id);
 
-    % ---- load only the six sensor columns ----
-    opts = detectImportOptions(run.file, 'VariableNamingRule', 'preserve');
-    missing = cfg.sensorCols(~ismember(cfg.sensorCols, opts.VariableNames));
-    if ~isempty(missing)
-        error('Channel(s) not found in %s: %s\nColumns in the file: %s', ...
-            run.id, strjoin(missing, ', '), strjoin(opts.VariableNames, ', '));
-    end
-    opts.SelectedVariableNames = cfg.sensorCols;
-    data = readtable(run.file, opts);
-    S = zeros(height(data), 6);
-    for i = 1:6, S(:, i) = data.(cfg.sensorCols{i}); end
+    % ---- load only the six sensor columns (.mat from convert_csv_to_mat, or the CSV) ----
+    S = readRunFile(run.file, cfg.sensorCols, run.id);
     last = find(all(isfinite(S), 2), 1, 'last');      % modules can end a few samples apart
     S = S(1:last, :);
     N = last;
@@ -415,7 +401,12 @@ function res = analyseRun(run, cfg, W)
         tStart = tCoarse;
         if cfg.refineStart
             [tFit, sdFit, dg] = refineTStart(F6, Fs, tCoarse, run.rpm, run.accel, cfg);
-            if isfinite(tFit)
+            if isfinite(tFit) && sdFit > 1 && abs(tFit - tCoarse) > 0.5
+                % weak 1x (no added mass, low speed): the ridge fit wanders - the coarse start
+                % (motor switch-on kick) is more reliable then
+                warning(['%s: 1x ridge fit unreliable (scatter %.2f s, %.2f s from the coarse start) - ' ...
+                         'using the coarse start %.2f s.'], run.id, sdFit, tFit - tCoarse, tCoarse);
+            elseif isfinite(tFit)
                 tStart = tFit;
                 fprintf('Motor start: coarse %.2f s -> refined from 1x ridge %.2f s (scatter %.2f s)\n', tCoarse, tFit, sdFit);
                 if sdFit > 0.3
@@ -428,6 +419,26 @@ function res = analyseRun(run, cfg, W)
     end
     if isnan(tCoarse), tCoarse = tStart; end
     tRampEnd = tStart + run.rpm / run.accel;
+    % the motor driver can cut out during the ramp (Tic T500 'motor driver error' near 1600 rpm):
+    % then the wheel coasts and there is no hold. Detect it and end the ramp at the cut.
+    tCut = findRampCut(F6, Fs, tStart, tRampEnd, run.accel);
+    cutOut = tCut < tRampEnd - 1;
+    rpmHold = run.rpm;
+    if cutOut
+        warning(['%s: motor cut out during the ramp at ~%.0f rpm (%.1f s). Ramp data used up to the cut; ' ...
+                 'there is no hold, so the "hold" results come from the last 2 s of the ramp.'], ...
+                 run.id, run.accel * (tCut - tStart), tCut);
+        tCut = tCut - 1;                               % detection lags ~1 s: keep coast-down data out
+        tRampEnd = tCut;
+    elseif tRampEnd > tStop - 0.5
+        % the motor stopped (or the record ended) before the commanded speed was reached
+        cutOut = true;
+        tCut = tStop - 1.5;
+        warning(['%s: motor stopped at ~%.0f rpm (%.1f s), before the commanded %d rpm. Ramp data used up ' ...
+                 'to there; no hold, so the "hold" results come from the last 2 s of the ramp.'], ...
+                 run.id, run.accel * (tStop - tStart), tStop, run.rpm);
+        tRampEnd = tCut;
+    end
     fprintf('Motor on at %.2f s, ramp to %d rpm ends at %.2f s, motor off at ~%.2f s\n', ...
         tStart, run.rpm, tRampEnd, tStop);
     if tStart < cfg.baselineSkipSec + cfg.baselineProbeSec + 0.3
@@ -438,13 +449,24 @@ function res = analyseRun(run, cfg, W)
     end
     % the motor may be decelerated before it stops: end the window where the 1x
     % line leaves the hold speed, not where the vibration stops
-    tHoldEnd = findHoldEnd(F6, Fs, tRampEnd, tStop, run.rpm / 60);
-    if tHoldEnd < tStop - 0.5
-        fprintf('Speed starts to drop at ~%.2f s (deceleration; vibration stops at %.2f s)\n', tHoldEnd, tStop);
+    if cutOut
+        win = [tCut - 2.5, tCut - 0.5];               % end of the ramp, speed still rising slowly
+        rpmHold = run.accel * (mean(win) - tStart);
+    else
+        tHoldEnd = findHoldEnd(F6, Fs, tRampEnd, tStop, run.rpm / 60);
+        if tHoldEnd < tStop - 0.5
+            fprintf('Speed starts to drop at ~%.2f s (deceleration; vibration stops at %.2f s)\n', tHoldEnd, tStop);
+        end
+        win = [tRampEnd + cfg.settleSec, tHoldEnd - cfg.endMarginSec];
     end
-    win = [tRampEnd + cfg.settleSec, tHoldEnd - cfg.endMarginSec];
     if isfield(ov, 'window'), win = ov.window; end
-    if win(2) - win(1) < 3
+    if win(2) - win(1) < 1                            % no usable hold (e.g. undetected cut-out)
+        warning('%s: no usable steady-speed hold - using the last 2 s of the ramp instead.', run.id);
+        win = [tRampEnd - 2.5, tRampEnd - 0.5];
+        rpmHold = run.accel * (mean(win) - tStart);
+        cutOut = true;
+    end
+    if win(2) - win(1) < 3 && ~cutOut
         warning('%s: steady-speed window is only %.1f s - use cfg.override to set it.', run.id, win(2) - win(1));
     end
     fprintf('Steady-speed window: %.1f - %.1f s\n', win(1), win(2));
@@ -461,7 +483,7 @@ function res = analyseRun(run, cfg, W)
     % ---- 1x amplitudes and static imbalance in the steady-speed window ----
     idx = t >= win(1) & t <= win(2);
     tw = t(idx); n = numel(tw);
-    f0 = run.rpm / 60;
+    f0 = rpmHold / 60;
     xs = F6(idx, 1) - mean(F6(idx, 1));
     ys = F6(idx, 2) - mean(F6(idx, 2));
     wn = 0.5 - 0.5 * cos(2 * pi * (0:n-1)' / (n - 1));          % Hann window
@@ -823,6 +845,66 @@ function [U0, fn, ok] = fitResonance(f, U, fMin)
     p = A \ ones(nnz(m), 1);                               % = U .* (1 ./ U)
     if p(1) <= 0 || p(2) >= 0, return; end                % U must rise with speed
     U0 = 1 / p(1); fn = sqrt(-p(1) / p(2)); ok = true;
+end
+
+function fn = findRunFile(folder, fn, prefix)
+    % Accept the naming variants used in the lab: RPM300_ / RPM_300_, SWEEP1500_ / SWEEP_1500_,
+    % and 'imbalanced' / 'imbalance', as .mat (preferred, from convert_csv_to_mat) or .csv.
+    % Returns '' if none of them exists.
+    c = {fn, strrep(fn, prefix, [prefix '_'])};
+    c = [c, strrep(c, 'imbalanced', 'imbalance')];
+    c = [strrep(c, '.csv', '.mat'), c];
+    for k = 1:numel(c)
+        if isfile(fullfile(folder, c{k})), fn = c{k}; return; end
+    end
+    fn = '';
+end
+
+function S = readRunFile(file, cols, id)
+    % Six sensor columns, in the order of COLS, from a run .mat or a FlexLogger CSV.
+    if endsWith(file, '.mat')
+        s = load(file, 'data', 'channels');
+        [ok, j] = ismember(cols, s.channels);
+        if ~all(ok), error('Channel(s) not found in %s: %s', id, strjoin(cols(~ok), ', ')); end
+        S = double(s.data(:, j));
+        return;
+    end
+    opts = detectImportOptions(file, 'VariableNamingRule', 'preserve');
+    missing = cols(~ismember(cols, opts.VariableNames));
+    if ~isempty(missing)
+        error('Channel(s) not found in %s: %s\nColumns in the file: %s', ...
+            id, strjoin(missing, ', '), strjoin(opts.VariableNames, ', '));
+    end
+    opts.SelectedVariableNames = cols;
+    data = readtable(file, opts);
+    S = zeros(height(data), numel(cols));
+    for i = 1:numel(cols), S(:, i) = data.(cols{i}); end
+end
+
+function tCut = findRampCut(F6, Fs, t0, t1, accel)
+    % Time the motor cut out during the ramp, or t1 if it did not. During the ramp the radial 1x
+    % sits on the line f = accel/60*(t - t0); after a cut-out the wheel coasts and leaves it.
+    % The cut is the start of the first 1 s window (two in a row, line above 5 Hz) whose power
+    % on the line is 30 dB below the highest power on the line so far.
+    tCut = t1;
+    nw = round(1 * Fs);
+    i0 = max(1, round(t0 * Fs) + 1); i1 = min(size(F6, 1), round(t1 * Fs));
+    if i1 - i0 < 4 * nw, return; end
+    S = 0;
+    for j = 1:2
+        [~, f, tt, P] = spectrogram(detrend(F6(i0:i1, j)), hann(nw), round(0.75 * nw), 2^nextpow2(8 * nw), Fs);
+        S = S + P;
+    end
+    tabs = (i0 - 1) / Fs + tt(:)';
+    fLine = accel / 60 * (tabs - t0);
+    Pl = zeros(size(tabs));
+    for q = 1:numel(tabs)
+        Pl(q) = max(S(abs(f - fLine(q)) <= 0.5, q));
+    end
+    Pmax = cummax(Pl);
+    low = Pl < Pmax / 1000 & fLine > 5;
+    q = find(low(1:end-1) & low(2:end), 1, 'first');
+    if ~isempty(q), tCut = tabs(q) - 0.5 * nw / Fs; end
 end
 
 function tEnd = findHoldEnd(F6, Fs, t0, t1, f0)

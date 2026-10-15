@@ -288,8 +288,8 @@ Don't change the signs unless sensors or stingers are re-mounted, and then repea
 
 ## Finding 7: the aluminium mounting plate barely moves the lowest modes (15 Oct taps)
 
-New aluminium mounting plate, ~575 g (PLA plate 192.6 g), so the supported mass is ~1375 g; the
-bolt ring is unchanged. Tap tests: 3 files per direction (X, Y, Z, TOP), radial peaks 0.3–2.8 N.
+New aluminium mounting plate, **551.05 g** (weighed; PLA plate 192.6 g), so the supported mass is
+~1351 g (plate + ~800 g RWA with wiring); the bolt ring is unchanged. Tap tests: 3 files per direction (X, Y, Z, TOP), radial peaks 0.3–2.8 N.
 
 | Mode | PLA plate, steel brackets (12 Oct) | Al plate (15 Oct) | Shows in |
 |---|---|---|---|
@@ -317,6 +317,161 @@ bolt ring is unchanged. Tap tests: 3 files per direction (X, Y, Z, TOP), radial 
   below the ~12 N Ry1 survived in the 13 Oct ~1900 rpm run. **1800 rpm is OK** for baseline and
   washer, steps and sweeps.
 - `cfg.phaseFnHz = 44` (effective x/y: 39.8/48.6 Hz) for the low-speed angle and vector analysis.
+
+## Finding 8: static known-mass check of the axial channels (15 Oct)
+
+Motor off, axial gauges re-tared, a **301.5 g** weight (W = 2.958 N) on the aluminium mounting
+plate, analysed over an 8 s untouched window per file (`STATIC_*_T1.csv`):
+
+| Placement (x, y) mm | Fz (exp. −2.958 N) | Moment (exp. 0.168 N·m) | Position implied by the moments (mm) |
+|---|---|---|---|
+| centre (0, 0), T1 | −2.933 | Mx −0.011, My +0.002 | (+0.6, +3.7) |
+| centre (0, 0), **T2 (carefully centred)** | −2.938 | Mx +0.0008, My +0.0003 | **(+0.1, −0.3)** |
+| (+56.9, 0) | −2.941 | My **+0.175** (1.04×) | (+59.6, +4.0) |
+| (−56.9, 0) | −2.938 | My **−0.165** (0.98×) | (−56.2, −0.8) |
+| (0, +56.9) | −2.926 | Mx **−0.178** (1.06×) | (+2.3, +60.9) |
+| (0, −56.9) | −2.979 | Mx **+0.171** (1.02×) | (−0.9, −57.5) |
+
+- **Axial force calibration: within −1.1% to +0.7%** of the known weight (compression reads
+  negative, as expected for tension-positive gauges).
+- **Moments: within −2% to +6%** (mean +2.5%), with correct signs (+x → +My, +y → −Mx) and
+  cross-terms ≤ 0.012 N·m. This independently confirms the axial sensor geometry (R = 50 mm,
+  240/0/120°), the axis orientation and the axial signs. The ± asymmetry suggests the weight
+  centres were ~1–2 mm off the nominal points (the user noted the placement wasn't clean),
+  consistent with the first centre test reading (+0.6, +3.7) mm. The carefully centred repeat (T2) reads
+  (+0.1, −0.3) mm with the three sensors equal within 0.02 N (−0.986/−0.984/−0.968 N against −0.986
+  expected each), so the position resolution is better than 1 mm.
+- (The first analysis assumed 67.5 mm, which was a measuring slip; the actual offset was 56.87 mm.)
+
+## Finding 9: aluminium-plate spin tests with known angles (15 Oct)
+
+Data: `15_10_26_tests/`, output in `analysis_output/`. 1/2 step, 37.5 rpm/s steps and 15 rpm/s
+sweeps to 1500 rpm (the Tic T500 cuts out at ~1600 rpm with "motor driver error"), every run
+started from the same wheel mark. 1W = one 1.48 g washer (96.2 g·mm). 2W = two stacked washers
+(192.4 g·mm). Ry1 ×1.11 applied.
+
+**Low-speed imbalance vector from each ramp** (200–450 rpm, resonance-corrected with fₙ = 44 Hz
+effective):
+
+| Condition | U (g·mm), per run | Angle at start (°), per run |
+|---|---|---|
+| baseline (12 runs) | 14–26 | 1000/1500 rpm and sweeps: −3 to −40; 300/600 rpm: scattered |
+| 1W at 6 o'clock (10 runs) | **114.9–118.2** | **−67 to −86** (steps −78 to −86) |
+| 1W at 3 o'clock (3 runs) | 118.3–120.2 | **+6, +6, +11** |
+| 2W at 6 o'clock (3 runs) | **199.3–199.9** | **−83 to −85** |
+| baseline_end (3 runs) | 26.3–27.2 | −16 to −63 |
+
+**Added imbalance after subtracting the wheel's own residual as a vector:**
+
+| | Using the start baseline (13.6 g·mm, −18.5°) | Using the end baseline (26.7 g·mm, −57.5°) | Expected |
+|---|---|---|---|
+| 1W, 6 o'clock | 110.7 g·mm (+15%) at −85.6° | 92.5 (−4%) at −85.6° | 96.2 at −90° |
+| 2W, 6 o'clock | 194.3 (+1%) at −87.2° | 176.1 (−8%) at −87.4° | 192.4 at −90° |
+| 1W, 3 o'clock | 107.1 (+11%) at +10.9° | 110.6 (+15%) at +20.3° | 96.2 at 0° |
+
+- **The angle is recovered within 3–5° at 6 o'clock** for both 1W and 2W, with either baseline.
+  Moving the washer to 3 o'clock moves the measured angle by **~96°** (expected 90°; the 3 o'clock
+  alignment was done by eye).
+- **Size: within about ±15% for 96 g·mm and about ±8% for 192 g·mm.** The limit is the wheel's own
+  residual, which **changed during the session**: 21 g·mm at about −20° before the washer was
+  fitted, 27 g·mm at about −57° after it was removed. Fitting the washer means loosening and
+  re-tightening a bolt, which shifts the residual by ~15 g·mm. That is the main uncertainty for
+  small test masses. (Solving 1W and 2W together gives 84 g·mm per washer, with a 37 g·mm residual
+  at −56°, close to the end baseline.)
+- **Repeatability within a condition is excellent:** low-speed U agrees within 0.1–2% and angles
+  within ±4° (steps).
+- **Resonance from the spin data:** fₙ = 39.8–39.9 Hz (1W, 1W_90deg, 2W sweeps), matching the
+  tap-test X-mode (39.5–40.0 Hz). Amplification at 1500 rpm is ~1.70 (1W: 200.7 hold vs 117.6 low
+  speed), essentially the same as with the PLA plate. **The aluminium plate did not change the
+  imbalance measurement**, consistent with Finding 7.
+- Two 300 rpm baseline runs used the coarse start, because the 1× ridge fit is unreliable for a
+  weak residual at low speed. `SWEEP_1500_imbalanced_2W_T1` stopped at ~1418 rpm, so the ramp is
+  used up to there.
+
+## Finding 10: dynamic torque measured directly (15 Oct)
+
+`TORQUE_600_T1–T3`: no added mass, 0 → 600 rpm at **300 rpm/s** (Tic accel 200000 at 1/2 step,
+α = 31.4 rad/s²), 2 s ramp. The motor's reaction torque on the platform is J·α; bearing
+friction is internal to the rotor and stator, so it isn't transmitted. Mz = s/2 · (Rx1 − Rx2).
+The AC-coupled piezos turn the torque step into a jump that decays. The model A·[h(t − ts) −
+h(t − ts − 2 s)], with h = exp(−t/τ), was fitted to the 3 Hz low-passed Mz
+(`daq_analysis/torque_step.py`).
+
+| Run | Step A (N·m) | Decay τ (s) | Fit R² |
+|---|---|---|---|
+| T1 | 0.0344 | 1.5 | 0.995 |
+| T2 | 0.0355 | 1.0 | 0.920 |
+| T3 | 0.0346 | 1.5 | 0.999 |
+| **Mean** | **0.0349 ± 0.0006** | | |
+
+- **Expected J·α = 0.0324 N·m**, from an estimated J = 1.03×10⁻³ kg·m²: 16 bolts at 65 mm give
+  6.5×10⁻⁴, the PLA wheel ~3.8×10⁻⁴, the rotor and coupling ~6×10⁻⁶. **The measurement is 8%
+  higher**, within the ±15% uncertainty of the inertia estimate (PLA mass distribution). The
+  implied J is 1.11×10⁻³ kg·m².
+- The rig measures **dynamic (changing) torque** with ~2% repeatability. Steady torque is not
+  measurable with the AC-coupled piezos. The ~1–1.5 s decay is the coupling time constant (it
+  should be checked against the NI 9232 spec).
+
+## Finding 11: rigid case instead of the plastic RWA, which shows where the compliance is (15 Oct)
+
+The plastic RWA (frame, motor and wheel) was replaced by a rigid case of the same footprint:
+**526.73 g + 551.05 g aluminium plate = 1077.8 g supported** (RWA configuration ~1351 g). Taps
+only, no spin (`15_10_26_rigid_case/`). `TAP_TOP` files contain 3 X taps then 3 Y taps at the top
+of the case.
+
+| Mode | Plastic RWA, 1351 g | Rigid case, 1078 g | Mass-only prediction (×1.12) | Stiffness k = m(2πf)² |
+|---|---|---|---|---|
+| X sway (Fx/My) | 39.8 Hz | **46.1–46.5 Hz** | 44.6 Hz | 84 → 91 kN/m (**+8%**) |
+| Y sway (Fy/Mx) | 48.6 Hz | **72.8–73.4 Hz** | 54.4 Hz | 126 → 228 kN/m (**+81%**) |
+| Twist (Mz) | 40.3 Hz | 42.9–44.3 Hz | | |
+| Axial (Fz) | 123 / 154 Hz | 114 / 174 Hz | | |
+
+- **Y was limited by the plastic RWA frame:** with the rigid case the Y stiffness nearly doubles.
+- **X was not:** X barely changes beyond the mass effect. Even with one 0.8 mm wire, Y is now 2.5×
+  stiffer than X (two wires), so the X compliance is not in the wires (~2.1 MN/m) but in the **Rx
+  support**. The twist mode (43 Hz) sits next to X (46 Hz), consistent with that, because the Rx
+  pair also resists twist.
+- **Tightening the Rx bracket bolts** (`TAP_X4–6`, gentler and centred taps): the lowest X mode
+  stays at **45.9–46.1 Hz**, while the higher X modes move 259 → 272 Hz, 317 → 323 Hz and
+  435 → 437 Hz, and a 60 Hz mode (probably rocking) appears. So the bracket joints affect the higher
+  modes but not the lowest one.
+- **Most likely limiting element: the clear acrylic base plate** under the Rx bracket (user's
+  assessment; consistent with all of the above). Not yet isolated by a direct test (e.g. clamping
+  the base plate or tapping the bracket on its own).
+
+**Future improvements (for the report):**
+1. Replace the acrylic base plate with steel/aluminium, or bolt the brackets directly to the steel
+   table or a rigid baseplate.
+2. Stiffen the RWA mounting (the plastic frame halved the Y stiffness), or test a rigid commercial
+   RWA housing.
+3. **Raising fₙ without losing stinger decoupling.** Simply making the stingers thicker raises
+   fₙ but increases bending stiffness, so each sensor picks up off-axis loads (worse decoupling).
+   The axial-to-lateral stiffness ratio of a uniform stinger is (EA/L)/(12EI/L³) = (4/3)(L/d)²: it
+   depends only on slenderness L/d, not on the material. Better routes, roughly in order of
+   payoff:
+   - **Fix the larger compliances first.** The measured lateral stiffness in X (~91 kN/m) is ~20×
+     below the Rx wires' axial stiffness (~2.1 MN/m), so the stingers are not yet the limit. The
+     acrylic base, bracket mounting and RWA frame are. Stiffening those has no decoupling cost.
+   - **Higher-modulus stinger material** (same geometry, so same decoupling): steel ~200 GPa →
+     molybdenum ~330 (1.65×), tungsten ~410 (2×), tungsten carbide ~600 GPa (3×, brittle).
+   - **Flexure (notched) stingers:** a thick, stiff body with short thin necks near each end acting
+     as hinges. High axial stiffness from the body, low bending and lateral stiffness from the necks.
+     This is the standard design for force platforms and modal-test stingers.
+   - **Scale L and d together:** at constant L/d, axial stiffness ∝ d and buckling load ∝ d², with
+     unchanged decoupling, at the cost of a larger rig.
+   - **Reduce the moving mass** (fₙ ∝ √(k/m)): the 551 g aluminium plate could be replaced by a
+     ribbed or pocketed plate of similar stiffness but much lower mass.
+   - **Pre-tension the wire stingers:** removes the compression-buckling risk (Ry1 was marginal,
+     SF 0.84 pinned) and slack, so thin wires can be used safely.
+   - **Stiffer end fittings** (collets or threaded ends instead of clamped bolt heads), since every
+     joint adds series compliance.
+   - **Axial load-cell stiffness:** the TAS510 strain-gauge cells are much softer than the PCB
+     piezos (~1 GN/m) and limit the axial and rocking modes. Piezo or higher-capacity axial sensors
+     would raise them.
+   The design target stays fₙ > 500 Hz. With stiff supports, the current 0.8 mm × 95 mm wires
+   alone would cap the lateral modes at ~160–220 Hz.
+4. Repeat the tap tests after each change to track the X/Y modes and the twist mode (diagnostic
+   method: lighter or rigid payload + tap, compare against the mass-only scaling).
 
 ## Why the measured imbalance rises with speed (poster-ready explanation)
 
