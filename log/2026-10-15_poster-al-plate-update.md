@@ -26,3 +26,4 @@
 
 - **Asked:** add the cost reference to the poster, using NZ$130–300k+.
 - **Did:** the Intro now reads "A commercial six-axis dynamometer system costs ≈NZ$130–300k+ [3, 4]". The first What We Achieved bullet now reads "Built … from ≈NZ$15–20k of standard lab sensors and DAQ – about 10× cheaper than a commercial system". Added references [3] Totis et al., *Sensors* 25(21), 2025 and [4] ESA ITT AO8840, 2016 (full entries in `knowledge/11_commercial_system_cost.md`). Tightened the font slightly to fit; re-exported the PDF and republished.
+- **Later:** rewrote `final_poster/INDEX.md` and `final_poster/poster_assets/INDEX.md` for the 15 Oct poster: panels, data source, file sizes, key numbers, and the new asset set (hero from `RWA_front1`, imbalance, polar angle, torque step and Campbell plots).
