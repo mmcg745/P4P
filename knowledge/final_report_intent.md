@@ -75,6 +75,7 @@ Last updated 15 Oct 2026.
   - [said, for the poster] Use "130–300k+" because it makes this rig look much cheaper.
   - [agreed] In the report, use the cited range (Totis 2025, Kistler 9236A, ESA tender, De Munter 2018). The rig's own cost is framed as hard to state cleanly, with the saving being in the sensing chain.
   - Keep any comparison to what the sources support (see the claims guidance in the skill).
+- **Final data [said, 15 Oct 02:49]:** "the 15/10 with aluminium plate is the final data we are using for outputs". Plots and headline outputs come from campaign C (aluminium plate, `15_10_26_tests`). Campaigns A and B stay only as the development and improvement history (e.g. the comparison of stiffness and amplification across configurations), not as the main evidence. As of 15 Oct evening the report still has these A/B figures in the body: PSD, Campbell, the rig photo (steel brackets) and moment height. In the appendix: tap spectra, imbalance vs speed and 1× Mz. They are still to be replaced.
 - **Presentation preferences (from the poster chats) [said]:**
   - Label figures by setup (e.g. "Al plate") or not at all. **Never by test date.**
   - The photo of the real RWA housing is preferred over the 3D-printed wheel because it looks cleaner. A rig photo with the aluminium plate can replace older photos.

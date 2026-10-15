@@ -9,3 +9,4 @@
   - Didn't copy Shuhei's and Andy's own report drafts (a separator CFD project): they aren't relevant, and the reports must be independent and are checked by Turnitin.
   - Shuhei's guidance has a 25-page, Intro-to-Conclusions ESB limit; our handbook has 30 pages, Intro to Future Work.
   - The page-cut decision is still open (body is ~5 pages over).
+- **Follow-up:** recorded the "15 Oct aluminium-plate data is the final data for outputs" rule in the intent file, plus the list of A/B figures still in the report. That rule was given in the poster chat after the report pass and had been missed.
