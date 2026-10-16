@@ -9,3 +9,5 @@
   - **Cost CHECK markers resolved** with new bib entries DeMunter2018, Totis2025, Kistler9236A and ESA2016. The rig cost is framed as "not cleanly definable; the saving is in the sensing chain".
   - **Page count:** moved the concept table, the parametric figure, the mid-year check table, the FEA sweep table, the tap spectra, the imbalance-vs-speed figure and the 1× Mz figure into new appendices A–B (`sections/09a_supplementary.tex`), and unpinned the body floats ([H] to [htbp]). Builds cleanly.
 - **Notes:** the body (Introduction to Future Work) is pages 1–35, so ~5 pages over the 30-page limit. Prose is ~11.4k words. Prose cuts were proposed to the user rather than made, because the user is reviewing the PDF.
+
+- Campbell plots regenerated in 15_10_26_tests (peer session): no report change needed. The report uses only `fig_campbell` (campaign B, 1.48 g washer poster plot), not the 15 Oct Campbell PNGs.
