@@ -408,6 +408,30 @@ h(t − ts − 2 s)], with h = exp(−t/τ), was fitted to the 3 Hz low-passed M
   6.5×10⁻⁴, the PLA wheel ~3.8×10⁻⁴, the rotor and coupling ~6×10⁻⁶. **The measurement is 8%
   higher**, within the ±15% uncertainty of the inertia estimate (PLA mass distribution). The
   implied J is 1.11×10⁻³ kg·m².
+- **Inertia breakdown** (16 Oct, scaled from Inventor's `flywheel_test` mass properties). Inventor
+  gives V = 233.47 cm³ and Iyy (spin) = 890.9 kg·mm², Ixx = Izz = 458.4 kg·mm² for solid ABS
+  (1.06 g/cm³). The weighed 105.97 g wheel gives an effective density of 0.454 g/cm³, about 37% of
+  solid PLA (1.24 g/cm³), which is consistent with 30–40% infill. Values are about the wheel centre:
+
+  | Part | Iyy, spin (kg·mm²) | Ixx = Izz (kg·mm²) |
+  |---|---|---|
+  | PLA wheel (uniform density) | 381.5 | 196.3 |
+  | 16 bolts as point masses, 16 × 9.56 g at r = 65 mm | 646.2 | 349 |
+  | bolts' own inertia | ~2 | ~5 |
+  | **wheel + bolts** | **≈ 1030** | **≈ 550** |
+
+  - Moving bolts along the spin axis (8 from the top, 8 from the bottom) doesn't change Iyy.
+  - The transverse terms use m(r²/2 + h²), with the bolt CoM at h ≈ 13 mm from the mid-plane
+    (estimated; bolt length not recorded), so they are uncertain by ~±10 kg·mm². The 8 positions
+    are symmetric about 0/90/180/270°, so Ixx = Izz. The mirrored top/bottom sets add no couple.
+  - Mass check: 105.97 + 16 × 9.56 = 258.9 g, matching the weighed wheel plus bolts.
+  - With the motor rotor (~6 kg·mm²): J ≈ 1.03×10⁻³ kg·m², J·α = 32.4 mN·m, so the measured
+    value is +8%.
+  - For uniform 30% / 40% infill, the wheel Iyy would be 313 / 417 kg·mm², and the measured
+    value would be +15% / +3.5%.
+  - Explaining the whole 8% from the wheel needs ~455 kg·mm², which means nearly all its mass in
+    the rim (upper bound ~460). Printed walls push mass outward, so this covers part of the gap.
+    Some of the rest is probably elsewhere, e.g. Mz scaling or the sensor spacing s.
 - The rig measures **dynamic (changing) torque** with ~2% repeatability. Steady torque is not
   measurable with the AC-coupled piezos. The ~1–1.5 s decay is the coupling time constant (it
   should be checked against the NI 9232 spec).

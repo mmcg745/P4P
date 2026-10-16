@@ -28,3 +28,8 @@
   - filled the placeholders: imbalance size within ~15%, angle within 5°, torque within 8% of the J·α prediction (sources: Results panel, `knowledge/10` Findings 9–10);
   - tidied bullet 1 to "from a few machined parts, off-the-shelf components, standard lab sensors and DAQ systems";
   - checked the fit with a test render, republished, and re-exported the HTML, PDF and preview.
+
+## Later: wheel + bolt inertia breakdown
+
+- **Asked:** recalculate the flywheel inertia from the Inventor mass properties (modelled as ABS) for the real PLA wheel at 30–40% infill, then include the 16 bolts (8 top, 8 bottom), and add the breakdown to `knowledge/10`.
+- **Did:** added an inertia table under Finding 10. The weighed 105.97 g wheel gives an effective density of 0.454 g/cm³ (≈37% of solid PLA), so the wheel Iyy is 381.5 kg·mm². The bolts add 646.2, for a total J ≈ 1.03×10⁻³ kg·m², the same as the estimate already used. Transverse Ixx = Izz ≈ 550 kg·mm² (assumes the bolt CoM is ~13 mm off the mid-plane). Also noted that the wheel alone can only just explain the +8% torque gap. The poster is unchanged.
