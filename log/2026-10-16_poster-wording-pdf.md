@@ -15,3 +15,8 @@
   - Re-exported `P4P_Poster_final.html`, `.pdf` (1 page, 84.1 × 59.4 cm) and `_preview.png`. The figures are unchanged (byte-identical to the previous `poster_assets`).
 - **Export method:** the old session's `export.py` turns the canvas `Main.dc.html` into the standalone HTML, mapping the `/_blob/` ids to `poster_assets/`. Headless Chrome then prints the PDF (`--print-to-pdf --no-pdf-header-footer`) and screenshots the preview at 3178×2246. Both the script and the source figures (`figs5/`, `poster/img/`) are in session scratchpads, not in this repo.
 - **Notes:** "Low-Cost" stays in the title and the commercial NZ$130–300k+ stays in the Intro, but the rig's own cost (≈NZ$15–20k) is no longer on the poster. That was the user's choice; have the figure ready to say aloud.
+
+## Later: tachometer next step reworded
+
+- **Asked:** reword the "Add an encoder/tachometer" next step so it says the tachometer gives the imbalance's precise phase/angle, which shows where to add a counterweight to balance the wheel.
+- **Did:** the card now reads "Gives the imbalance's precise angle on every run, showing where to add a counterweight to balance the wheel." A first, longer version overflowed the panel in a test render, so it was trimmed. Republished the canvas and re-exported the HTML, PDF and preview.
