@@ -502,6 +502,59 @@ of the case.
 4. Repeat the tap tests after each change to track the X/Y modes and the twist mode (diagnostic
    method: lighter or rigid payload + tap, compare against the mass-only scaling).
 
+## Predicted fₙ after stiffening (estimate, 16 Oct; report/poster-ready)
+
+**Question:** what would the lowest lateral modes be if the acrylic base plate were removed or
+replaced by a much stiffer (and heavier) base?
+
+**Method:** a lumped single-mass, series-spring model per direction, with k = m(2πf)², using the
+15 Oct tap tests (Findings 7 and 11). The support stiffness is backed out as
+1/k_support = 1/k_measured − 1/k_wires.
+
+| Direction | Element | Stiffness | Source |
+|---|---|---|---|
+| X | measured, rigid case (1.078 kg, 46.3 Hz) | 91 kN/m | Finding 11 |
+| X | Rx wires, 2 × Ø0.8 × 95 mm steel, EA/L | 2.12 MN/m | E = 200 GPa |
+| X | **support (acrylic base + bracket mounting)** | **~95 kN/m, the weak link** | difference |
+| X | plastic RWA frame | ~1.2 MN/m | RWA (84.5 kN/m) vs rigid case (91 kN/m) |
+| Y | measured, rigid case (73 Hz) | 228 kN/m | Finding 11 |
+| Y | Ry wire, 1 × Ø0.8 × 95 mm | 1.06 MN/m | EA/L |
+| Y | support | ~290 kN/m | difference |
+| Y | **plastic RWA frame** | **~280 kN/m, the weak link** | RWA (126 kN/m) vs rigid case (228 kN/m) |
+
+**Assumptions:**
+- Replacing the acrylic leaves the steel brackets as the support. Their stiffness was not
+  measured, so **0.5–1 MN/m** is assumed.
+- The masses are 1.351 kg with the RWA and 1.078 kg with the rigid case.
+- The modes are treated as uncoupled. In reality X couples with twist, and Y with Mx rocking.
+
+**Predictions:**
+
+| Setup | X sway | Y sway | Lowest mode | Amplification at 1500 rpm (25 Hz) |
+|---|---|---|---|---|
+| Now (acrylic, plastic RWA) | 39.8 Hz (measured) | 48.6 Hz (measured) | ~40 Hz | ×1.65 |
+| Acrylic replaced, plastic RWA kept | ~90–120 Hz | **~64 Hz** (frame-limited) | **~60–65 Hz** | ×1.18 |
+| Acrylic replaced + rigid RWA housing | ~100–125 Hz | up to ~160 Hz | **~100–125 Hz** | ×1.04–1.07 |
+| Perfectly rigid supports (wires only) | ~200–220 Hz | ~160 Hz | ~160 Hz | ×1.02 |
+
+**Takeaways:**
+- Replacing the acrylic roughly doubles the X mode. Y then becomes the limit unless the RWA frame
+  is also stiffened.
+- With both fixed, the speed-dependent rise in measured U mostly disappears in the 0–1500 rpm
+  range.
+- Even with ideal supports, the current 0.8 mm wires cap the platform at ~160–220 Hz. Reaching
+  the 250 Hz (poster) or 500 Hz (design) target therefore also needs stinger changes:
+  higher-modulus or notched-flexure stingers, a lighter plate, or scaling L and d together.
+- **Stiffness matters, not mass.** A heavier base doesn't hurt, and on the isolation table it acts
+  as a better ground. The gain comes from the base not flexing under the brackets.
+
+**Caveats:**
+- These are estimates, not test results.
+- The support figure lumps the acrylic and the bracket joints together. That the acrylic is the
+  culprit is the user's assessment and has not been isolated yet.
+- **Cheap check:** clamp or stiffen the base plate under the Rx bracket and re-tap, then compare
+  with the 46 Hz X mode from the rigid case.
+
 ## Why the measured imbalance rises with speed (poster-ready explanation)
 
 Terminology used on the poster: **"baseline wheel"** = the `balanced` condition (3D-printed

@@ -52,6 +52,7 @@ Last updated 15 Oct 2026 (FEA vs rigid-case comparison).
      - The diagnosis: the aluminium plate isn't the limit; the wheel's frame limits y; x is whole-body sway below the stingers (likely the acrylic base).
      - The rig is up to 87 times softer laterally than the wires alone. Against the rigid-case tap tests (1.08 kg), the FEA (which uses bonded joints and a fixed base) is still 10 times too stiff in x and 2.3 times in y.
 7. **Implication and future work.** Stiffen the support structure (base first, then the frame, higher-modulus or notched stingers and a lighter plate), add an encoder, and test a flight-representative wheel.
+   - **Predicted fₙ after stiffening** (16 Oct): estimates and assumptions are in `knowledge/10_experimental_results.md`, "Predicted fₙ after stiffening". Replacing the acrylic gives a lowest mode of ~60–65 Hz (Y, limited by the plastic frame). Adding a rigid housing gives ~100–125 Hz. The wires alone cap it at ~160–220 Hz. This is a candidate short paragraph or table for Future Work, but the report is at its 30-page limit, so it has to replace text, not add to it. Not yet in the report or poster.
 
 **Tone [draft]:** honest engineering. The limitation is a *finding*, not a failure: the report shows what limits a low-cost platform and how to fix it. The cost claims stay cited and calibrated (see §4).
 

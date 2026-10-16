@@ -33,3 +33,8 @@
 
 - **Asked:** recalculate the flywheel inertia from the Inventor mass properties (modelled as ABS) for the real PLA wheel at 30–40% infill, then include the 16 bolts (8 top, 8 bottom), and add the breakdown to `knowledge/10`.
 - **Did:** added an inertia table under Finding 10. The weighed 105.97 g wheel gives an effective density of 0.454 g/cm³ (≈37% of solid PLA), so the wheel Iyy is 381.5 kg·mm². The bolts add 646.2, for a total J ≈ 1.03×10⁻³ kg·m², the same as the estimate already used. Transverse Ixx = Izz ≈ 550 kg·mm² (assumes the bolt CoM is ~13 mm off the mid-plane). Also noted that the wheel alone can only just explain the +8% torque gap. The poster is unchanged.
+
+## Later: predicted fₙ after stiffening
+
+- **Asked:** estimate fₙ if the acrylic base were removed or replaced with a heavier, stiffer material, and record it so that other chats, the report and possibly the poster can use it.
+- **Did:** added "Predicted fₙ after stiffening" to `knowledge/10_experimental_results.md`. It covers the method (lumped series springs from the 15 Oct tap tests), a stiffness table, the assumptions (bracket 0.5–1 MN/m), predictions, takeaways and caveats. Results: replacing the acrylic gives ~60–65 Hz (Y, limited by the plastic frame); adding a rigid housing gives ~100–125 Hz; the wires alone cap it at ~160–220 Hz. Added a pointer in `knowledge/final_report_intent.md` under Future Work, noting the 30-page limit. The report and poster are not changed yet.
