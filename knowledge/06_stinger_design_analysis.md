@@ -1,7 +1,14 @@
 # Stinger Design Analysis (Mid-Year Technical Report, Section 3)
 
 Part of [[00_project_overview]]. See also [[04_concept_design]], [[07_finite_element_analysis]].
-Related code: [plots.py](../plots.py), [stinger_design_V3.m](../stinger_design_V3.m).
+Related code: [plots.py](../plots.py), [stinger_design_V3.m](../MATLAB/stinger_design_V3.m).
+
+> **Update (16 Oct 2026):** the script now defaults to the final piano-wire geometry
+> (`design_case = 'final'`; set it to `'midyear'` for the rod design below). Frequency targets are
+> **best case > 500 Hz** and **acceptable case > 300 Hz** (the poster's next-step target). It
+> reproduces the report's final-design table: axial bounce 425 Hz (acceptable); lateral 232/164 Hz
+> and pinned buckling fail. See `log/2026-10-16_stinger-script-final-geometry.md`. The mid-year
+> content below is kept as history.
 
 ## Design Requirements — Five Checks Per Stinger
 
