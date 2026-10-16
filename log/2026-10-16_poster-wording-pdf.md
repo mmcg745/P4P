@@ -20,3 +20,11 @@
 
 - **Asked:** reword the "Add an encoder/tachometer" next step so it says the tachometer gives the imbalance's precise phase/angle, which shows where to add a counterweight to balance the wheel.
 - **Did:** the card now reads "Gives the imbalance's precise angle on every run, showing where to add a counterweight to balance the wheel." A first, longer version overflowed the panel in a test render, so it was trimmed. Republished the canvas and re-exported the HTML, PDF and preview.
+
+## Later: What We Achieved accuracy figures
+
+- **User's canvas edits:** What We Achieved bullets rewritten: the platform is built from machined and off-the-shelf parts, and the measurement bullet had "x%" / "y%" placeholders. The editor left the bullets outside their `<ul>`, but they still render correctly, so the markup was left as is.
+- **Asked and did:**
+  - filled the placeholders: imbalance size within ~15%, angle within 5°, torque within 8% of the J·α prediction (sources: Results panel, `knowledge/10` Findings 9–10);
+  - tidied bullet 1 to "from a few machined parts, off-the-shelf components, standard lab sensors and DAQ systems";
+  - checked the fit with a test render, republished, and re-exported the HTML, PDF and preview.
