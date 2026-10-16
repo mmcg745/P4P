@@ -543,7 +543,7 @@ replaced by a much stiffer (and heavier) base?
 - With both fixed, the speed-dependent rise in measured U mostly disappears in the 0–1500 rpm
   range.
 - Even with ideal supports, the current 0.8 mm wires cap the platform at ~160–220 Hz. Reaching
-  the 250 Hz (poster) or 500 Hz (design) target therefore also needs stinger changes:
+  the 300 Hz (poster) or 500 Hz (design) target therefore also needs stinger changes:
   higher-modulus or notched-flexure stingers, a lighter plate, or scaling L and d together.
 - **Stiffness matters, not mass.** A heavier base doesn't hurt, and on the isolation table it acts
   as a better ground. The gain comes from the base not flexing under the brackets.

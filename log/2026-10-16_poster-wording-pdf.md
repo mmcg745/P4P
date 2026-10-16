@@ -38,3 +38,8 @@
 
 - **Asked:** estimate fₙ if the acrylic base were removed or replaced with a heavier, stiffer material, and record it so that other chats, the report and possibly the poster can use it.
 - **Did:** added "Predicted fₙ after stiffening" to `knowledge/10_experimental_results.md`. It covers the method (lumped series springs from the 15 Oct tap tests), a stiffness table, the assumptions (bracket 0.5–1 MN/m), predictions, takeaways and caveats. Results: replacing the acrylic gives ~60–65 Hz (Y, limited by the plastic frame); adding a rigid housing gives ~100–125 Hz; the wires alone cap it at ~160–220 Hz. Added a pointer in `knowledge/final_report_intent.md` under Future Work, noting the 30-page limit. The report and poster are not changed yet.
+
+## Later: predicted fₙ on the poster
+
+- **User's canvas edit:** the "Stiffen the system" target is now f_n > 300 Hz (was 250). Updated the predicted-fₙ note in `knowledge/10` to match.
+- **Asked and did:** added the estimate to the "Stiffen the system" card: "A stiff base should lift the lowest mode to ~60–65 Hz, or ~100–125 Hz with a rigid RWA housing". To keep the card at three lines, the first sentence was tightened ("Taps show…", "acrylic base") and "Fix these first, then" merged in. Test-rendered, republished, and re-exported the HTML, PDF and preview.
