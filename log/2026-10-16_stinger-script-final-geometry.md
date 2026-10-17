@@ -40,3 +40,31 @@
     placeholder for the TAS510.
   - The report never mentions 300 Hz; it uses 500 Hz only. 300 Hz is the poster's next-step
     target.
+
+## Later: TAS510 estimates added
+
+- **Asked:** find the TAS510 weight and stiffness, then add the estimates to the script: about
+  25 g seismic mass and 1 MN/m in series, with the measured 0.2–0.5 MN/m axial path as INFO.
+- **Found:** neither the datasheet (`P4P Shared/DAQ/tas510_10kg.webp`), the CAD file nor a web
+  search gives a weight or stiffness. Dimensions: Ø25.4 × 13 mm stainless body, M5 studs, 37 mm
+  overall, so a solid body would be ~52 g plus ~4 g of studs. ANSYS models it as steel with
+  E = 195 GPa.
+- **Did:** in `MATLAB/stinger_design_V3.m`:
+  - `k_sensor_ax = 1e6` and `m_transducer_ax = 0.025`, both marked ESTIMATE.
+  - The mid-year case forces the sensor stiffnesses to Inf so its stinger-only table still
+    reproduces.
+  - New INFO table: the measured Fz tap modes (B 128 Hz; C 122.7/154.1 Hz; rigid case
+    114/174 Hz) give 184–429 kN/m per leg and 200–524 kN/m of non-wire stiffness per leg.
+  - The optimisation now explains a zero result when the load cells cap the bounce mode.
+- **Result (re-run, both cases):**
+  - Axial bounce with the cell in series drops from 425 to **231 Hz**, from ACCEPTABLE to FAIL.
+  - The axial transducer resonance is 845 Hz (PASS).
+  - The load cell alone caps bounce at **276 Hz**, so the final-case optimisation finds 0
+    combinations, even at 300 Hz.
+  - The mid-year case still gives 892/515 Hz and 101/242 (28 875 best, slightly up because the
+    radial sensor stiffness is now Inf there).
+- **Notes:**
+  - The report's 425 Hz is wire-only, which the script still prints as "stingers only".
+  - The axial path measured on the rig (0.2–0.5 MN/m per leg) is softer than the assumed cell, so
+    the base and joints add compliance too. Treat the 1 MN/m as a rough upper-end guess.
+  - To pin it down, weigh a spare cell, or load one statically with a dial gauge.

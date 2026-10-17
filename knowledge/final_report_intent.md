@@ -7,7 +7,7 @@ Sections are marked by source:
 - **[agreed]**: Claude proposed it and Matthew accepted it.
 - **[draft]**: a framing that is in the current draft but hasn't been explicitly discussed; treat it as provisional.
 
-Last updated 15 Oct 2026 (FEA vs rigid-case comparison).
+Last updated 17 Oct 2026 (PDF comment pass).
 
 ---
 
@@ -91,6 +91,15 @@ Last updated 15 Oct 2026 (FEA vs rigid-case comparison).
   - The photo of the real RWA housing is preferred over the 3D-printed wheel because it looks cleaner. A rig photo with the aluminium plate can replace older photos.
   - "What we did" is framed as overall achievement, not a split of contributions. That was for the poster; in the report the contribution statement is required (see §5).
 
+- **PDF comment pass (17 Oct) [said]:**
+  - **No 1900 rpm results anywhere.** Testing is presented as up to 1500 rpm, limited by the stepper drive; with hindsight a brushless DC motor would have been chosen. The model claim is now "corrected readings constant within about 4% up to 1500 rpm".
+  - Stiffness ratios quoted only for the aluminium plate + steel brackets and the rigid case (8–25×, 5–23×), not the PLA 87×.
+  - The 26 g·mm comparison is qualified: the 0.02–0.2 g·mm noise floor is stationary; in spin tests the wheel's own 10–20 g·mm changes set the practical limit.
+  - Cost: everything came from in-house university stock except the brackets, which were bought to cut manufacturing time and complexity.
+  - Appendix C is now the campaign C run summary. Appendix A carries the final-design checks (Table A2) and the parametric figure from `stinger_design_V3.m`; the mid-year table is gone.
+  - Aim, objectives and scope are written without hindsight (stingers come in via the literature review).
+  - The predicted fₙ after stiffening and the load-cell-in-series 231 Hz are now in the report (Future Work, §3.4).
+
 ## 4. Writing guidance to apply (stem-research-writing skill)
 
 The skill is installed at `.claude/skills/stem-research-writing/` (imported from Shuhei's Codex wiki). The points that matter most for this report:
@@ -108,7 +117,7 @@ The skill is installed at `.claude/skills/stem-research-writing/` (imported from
 
 ## 5. Open items (as of 15 Oct, evening)
 
-1. **Page count: done (15 Oct, late evening).** The body now ends exactly on page 30, with no spare lines, so any addition will push it over. Body prose went from ~14,460 to ~12,590 words (texcount, text only; results unchanged). Matthew chose to make the cuts now.
+1. **Page count: done (15 Oct, late evening).** After the 17 Oct comment pass the body still ends on page 30, now with about a fifth of a page spare. Body prose went from ~14,460 to ~12,590 words (texcount, text only; results unchanged). Matthew chose to make the cuts now.
    - Prose cuts by section: design −490, discussion −480, literature review −380, future work −170, method −140, introduction −120, conclusions −85.
    - Headings: the subsubsections of lit review §2.1, §2.2 and §2.5 were removed, and the three concept rounds became run-in paragraphs ("In the first round…"). "Predicted sensitivity" was folded into the static-imbalance subsection.
    - Moved to Appendix A: the final-geometry FEA figure and the platform natural-frequency table (with the mode 6 `\checkme`).
@@ -118,8 +127,9 @@ The skill is installed at `.claude/skills/stem-research-writing/` (imported from
    - **Waiting on Matthew:** review the cuts. The campaign C figure swap is done, and the body is still 30 pages.
    - **Washer height [said]:** still about 230 mm above the base plate with the aluminium plate, so the campaign C moment heights read 10–12% high at low speed. The report says so, with the caveats.
 2. **Contribution split with Brodie:** `\checkme` in the Introduction. Confirm with Brodie and the supervisor. Also check whether Brodie's report reuses any of these figures, which affects caption citations.
-3. **Mode 6 shape** (324.7 Hz, assumed to be vertical bounce): `\checkme` in the natural-frequency table, now in Appendix A.
-4. **Title page:** report number format and specialisation.
+3. **Mode 6 shape:** done 17 Oct (confirmed axial bounce).
+4. **Title page:** done 17 Oct ("Part IV Project 116 – 2026", dated 18 October 2026).
+4a. **DOIs:** most reference entries have none; look up real DOIs (Crossref) if wanted. Never invent.
 5. **Appendix:** the list of research compendium contents.
 6. **Declaration:** replace `Declaration.pdf` with the signed 2026 version.
 7. **Final passes:**

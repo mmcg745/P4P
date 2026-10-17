@@ -10,7 +10,8 @@
 %     system" target). Frequency checks report BEST / ACCEPTABLE / FAIL
 %   - Natural frequency per direction: fn = sqrt(n*EA/L / m)/(2*pi) with
 %     n = 3 (axial bounce), n = 2 (lateral x, Rx pair), n = 1 (lateral y, Ry1)
-%   - Sensor stiffness in series with each stinger (PCB 208C: 1.05 kN/um)
+%   - Sensor stiffness in series with each stinger (PCB 208C: 1.05 kN/um;
+%     TAS510: ~1 MN/m estimated) and an INFO check of the measured axial path
 %   - Buckling reported for pinned and fixed ends; pass/fail uses K_end
 %   - Yield check now uses axial stress in each stinger (the radial
 %     stingers carry the lateral load, so the axial stingers are not
@@ -116,8 +117,12 @@ m_transducer_rad  = 0.0114;     % Seismic mass [kg] — ASSUMED half of the
 % Axial: TAS510 10 kg strain-gauge load cells
 sensor_res_axial  = 0.29;       % Rated combined error ±0.3% FS [N] (static,
                                  % conservative for dynamic resolution)
-k_sensor_ax       = Inf;        % Load-cell stiffness unknown [N/m]
-m_transducer_ax   = 0.005;      % Seismic mass [kg] — placeholder, unknown
+k_sensor_ax       = 1e6;        % Load-cell stiffness [N/m] — ESTIMATE, not
+                                 % published: typical 0.05-0.1 mm full-scale
+                                 % deflection for miniature cells (98 N FS)
+m_transducer_ax   = 0.025;      % Seismic mass [kg] — ESTIMATE: about half of
+                                 % the ~50 g stainless body + studs
+                                 % (Ø25.4 x 13 mm body, M5 studs, 37 mm overall)
 
 % DAQ: NI cDAQ, NI 9232 (radial) and NI 9237 (axial), FlexLogger
 V_DAQ             = 30;         % NI 9232 input range [±V]
@@ -156,6 +161,11 @@ m_total = m_RWA + m_plate;
 % Stinger axial stiffness in series with its sensor
 k_ax_wire   = E * A_ax / L_axial;
 k_rad_wire  = E * A_rad / L_radial;
+if strcmp(design_case, 'midyear')
+    % Mid-year checks were stinger-only; keep them reproducible
+    k_sensor_ax  = Inf;
+    k_sensor_rad = Inf;
+end
 k_ax_path   = 1 / (1/k_ax_wire  + 1/k_sensor_ax);
 k_rad_path  = 1 / (1/k_rad_wire + 1/k_sensor_rad);
 
@@ -285,7 +295,7 @@ fprintf('    Stress %.1f MPa, SF %.1f, deflection %.4f mm\n\n', ...
 fn_comb_ax = (1/(2*pi)) * sqrt(k_ax_path / m_transducer_ax);
 lvl_ax5    = freq_level(fn_comb_ax, fn_target_best, fn_target_acc);
 fprintf('  CHECK 5 — Transducer-inertia/stinger resonance (McConnell & Cappa, 2000)\n');
-fprintf('    Transducer mass:     %.4f kg (placeholder)\n', m_transducer_ax);
+fprintf('    Transducer mass:     %.4f kg (estimated)\n', m_transducer_ax);
 fprintf('    fn_combined = %.1f Hz\n', fn_comb_ax);
 fprintf('    RESULT: %s\n\n', level_str(lvl_ax5));
 
@@ -405,6 +415,29 @@ for i = 1:size(asbuilt,1)
         k_wire_x/kx, k_wire_y/ky);
 end
 fprintf('\n  The compliance is outside the stingers (supports, base, RWA frame).\n\n');
+
+% Measured axial (Fz) modes, treated as bounce on 3 legs. Backs out the
+% non-wire stiffness per leg (load cell + base + joints) in series with
+% the wire: 1/k_other = 1/k_leg - 1/k_wire
+% {label, mass [kg], f [Hz]}
+axial_meas = { 'B: steel brackets', 0.993, 128.0;
+               'C: Al plate',       1.351, 122.7;
+               'C: Al plate',       1.351, 154.1;
+               'Rigid case',        1.078, 114.0;
+               'Rigid case',        1.078, 174.0 };
+fprintf('  INFO — Measured axial path (Fz tap modes, n = 3 legs)\n');
+fprintf('  Wire EA/L per leg: %.2f MN/m   TAS510 assumed: %.2f MN/m\n\n', ...
+    k_ax_wire/1e6, k_sensor_ax/1e6);
+fprintf('  Setup              | m [kg] | f [Hz] | k per leg [kN/m] | non-wire per leg [kN/m]\n');
+fprintf('  ---------------------------------------------------------------------------\n');
+for i = 1:size(axial_meas,1)
+    k_leg   = axial_meas{i,2}*(2*pi*axial_meas{i,3})^2 / 3;
+    k_other = 1/(1/k_leg - 1/k_ax_wire);
+    fprintf('  %-18s | %6.3f | %6.1f | %16.0f | %10.0f\n', ...
+        axial_meas{i,1}, axial_meas{i,2}, axial_meas{i,3}, k_leg/1e3, k_other/1e3);
+end
+fprintf('\n  The measured axial path is ~0.2-0.5 MN/m per leg, softer than the\n');
+fprintf('  assumed load cell, so the base and joints also add compliance.\n\n');
 
 %% =========================================================================
 %  SIGNAL CHAIN CHECKS
@@ -716,7 +749,15 @@ fprintf('  Acceptable case (> %d Hz): %d of %d combinations pass all checks.\n\n
 
 if isempty(results)
     fprintf('  NO feasible combinations found.\n');
-    fprintf('  Consider relaxing targets or expanding search ranges.\n\n');
+    fn_cap_ax = (1/(2*pi))*sqrt(3*k_sensor_ax/m_total);
+    if fn_cap_ax < fn_target_acc
+        fprintf('  The axial load cells alone cap the bounce mode at %.0f Hz\n', fn_cap_ax);
+        fprintf('  (rigid stingers), below the %d Hz acceptable target.\n', fn_target_acc);
+        fprintf('  Stiffer axial sensors are needed; set k_sensor_ax = Inf for\n');
+        fprintf('  a stinger-only sweep.\n\n');
+    else
+        fprintf('  Consider relaxing targets or expanding search ranges.\n\n');
+    end
 else
     best = results(results(:,15) == 1, :);
     if isempty(best)
